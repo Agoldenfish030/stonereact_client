@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Layout from './components/MainArea/Layout';
 import Home from './components/MainArea/Home';
+import Award from './components/Award/Award';
 import Setting from './components/Setting/Setting';
 import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
@@ -92,6 +93,8 @@ function App() {
                                 themeColor={themeColor} 
                             />
                         } />
+
+                        <Route path = "/award" element = {<Award />} />
                         
                         <Route path="/setting" element={
                             <Setting

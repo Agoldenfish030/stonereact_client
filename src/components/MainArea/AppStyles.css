@@ -40,7 +40,20 @@ body {
 }
 
 .todo-list-area h2, .game-area h2{
-    text-align: center;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+}
+
+.game-header-icon, .list-header-icon {
+    width: 1.1em;
+    height: 1.1em;
+    stroke-width: 2px; 
+    transition: all ease;
+    color: rgb(114, 92, 154);
 }
 
 .add-task-section {

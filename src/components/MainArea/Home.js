@@ -3,6 +3,7 @@ import TodoCard from '../TodoCard/TodoCard';
 import mockTrelloTasks from '../TodoCard/MockData';
 import Stone from '../Stone/Stone';
 import './Home.css';
+import { Gamepad2, ClipboardList } from 'lucide-react';
 
 const HomeContent = ({ name, xp, level, onTaskComplete }) => {
     const [tasks, setTasks] = useState(mockTrelloTasks);
@@ -64,7 +65,7 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
             
             {/* 左側：遊戲養成區域 */}
             <section className="game-area">
-                <h2>🎮 遊戲進度</h2>
+                <h2><Gamepad2 className = 'game-header-icon'/> 遊戲進度</h2>
                 
                 {/* 經驗值條面板 (我們沿用之前的結構，但放在 game-area 內) */}
                 <div className="stat-panel" style={{ background: '#ced5deff', color: 'white', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
@@ -85,7 +86,7 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
 
             {/* 右側：代辦清單區域 */}
             <section className="todo-list-area">
-                <h2>📋 待辦清單</h2>
+                <h2><ClipboardList className = 'list-header-icon'/> 待辦清單</h2>
     
                 <div className="add-task-section" style={{ marginBottom: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     

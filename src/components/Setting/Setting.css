@@ -10,7 +10,7 @@
 
 .settings-card {
     width: 100%;
-    max-width: 650px; /* 像 Google 設定一樣的黃金寬度 */
+    max-width: 650px;
     background: #ffffff;
     padding: 20px 40px 40px;
     border-radius: 20px;
@@ -32,6 +32,7 @@
     height: 1.1em;
     stroke-width: 2px; 
     transition: all ease;
+    color: grey;
 }
 
 .settings-section {
