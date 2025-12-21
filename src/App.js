@@ -9,7 +9,7 @@ import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
 
 function App() {
-    // 遊戲核心狀態 (加入讀檔邏輯)
+    // 遊戲核心狀態
     const [xp, setXp] = useState(() => {
         const saved = localStorage.getItem('game_xp');
         return saved ? Number(saved) : 0;
@@ -20,7 +20,7 @@ function App() {
         return saved ? Number(saved) : 1;
     });
 
-    // 個人化設定狀態 (字體與背景色)
+    // 個人化設定狀態
      const [name, setName] = useState(() => {
         const saved = localStorage.getItem('game_user_name');
         return saved ? saved : '俗頭';
@@ -49,7 +49,7 @@ function App() {
         alert('設定已儲存！');
     };
 
-    // 遊戲動作：處理獲得經驗與升級
+    // 處理獲得經驗與升級
     const handleTaskComplete = (xpGain, taskTitle) => {
         alert(`任務:「${taskTitle}」已完成！獲得經驗值！`);
         setXp(prev => Number(prev) + Number(xpGain));
