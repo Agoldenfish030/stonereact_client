@@ -1,0 +1,114 @@
+/*===[PART4: card style, class*10]===============================================================================================*/
+
+.todo-card {
+    background-color: #e3f0ff;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin: 5px 10px 5px;
+    padding-left: 8px;
+    gap: 5px;
+    display: flex;
+
+    position: relative;
+    padding-bottom: 48px;
+    flex-direction: column; /* 讓內容預設就由上往下排 */
+}
+
+.card-header h4 {
+    margin: 0;
+}
+
+.card-title{
+    padding-top: 8px;
+    display: block;
+}
+
+.list-tag {
+    left: 15px;
+    bottom: 10px;
+    position: absolute;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+}
+
+.card-meta {
+    top: 10px;
+    right: 15px;
+    position: absolute;
+    display: flex;
+    gap: 5px;
+    font-size: 14px;
+    color: grey;
+    align-items: center;
+}
+
+.xp-value {
+    background-color: #f1f8ff;
+    color: #5f87ba;
+    padding: 2px 6px;
+    border-radius: 12px;
+    font-weight: bold;
+    border: 1px solid #c8e1ff;
+}
+
+.complete-btn {
+    padding: 3px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: #7692b5;
+    box-shadow: 0 2px 4px grey(0, 0, 0, 5);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+}
+
+.complete-btn:hover {
+    text-decoration: underline;
+}
+
+.completed-btn {
+    padding: 3px;
+    border-radius: 4px;
+    border-width: 1px;
+    border-color: #7692b5;
+    box-shadow: 0 2px 4px grey(0, 0, 0, 5);
+    display: flex;
+    align-items: center;
+    gap: 2px;
+
+    position: absolute;
+    bottom: 10px;
+    right: 15px;
+}
+
+@media (max-width: 1000px) {
+    .todo-card {
+        align-items: center; /* 讓內容在手機上居中 */
+        text-align: center;
+        padding: 15px;
+        
+    }
+
+    .card-header, .card-footer {
+        flex-direction: column; /* 強制垂直排列 */
+        align-items: center;
+        width: 100%;
+    }
+
+    .list-tag, .card-meta {
+        justify-content: center;
+        position: static;
+    }
+
+    .complete-btn, .completed-btn {
+        position: static; /* 確保按鈕不會浮在別人上面 */
+        width: 80%;
+        justify-content: center;
+        padding: 10px;
+    }
+}

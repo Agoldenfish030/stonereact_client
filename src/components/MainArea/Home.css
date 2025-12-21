@@ -1,0 +1,80 @@
+/* Home.css */
+.home-container {
+    padding: 20px;
+    display: flex;
+    flex-wrap: wrap; /* 當寬度不夠時，元件會自動換行 */
+    justify-content: center;
+    gap: 15px;
+}
+
+/* 角色面板樣式 */
+.stat-panel {
+    background: #2d3436;
+    color: white;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.stat-info {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.progress-bar {
+    width: 100%;
+    height: 20px;
+    background: #636e72;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    transition: width 0.3s ease;
+}
+
+/* 列表區域樣式 */
+.card-list {
+    display: grid;
+    gap: 15px;
+    margin-top: 15px;
+    width: 100%;
+}
+
+/* 新增任務區域樣式 */
+.add-task-section {
+    margin-top: 25px;
+    padding-top: 25px;
+    border-top: 1px solid #ddd;
+}
+
+.input-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.input-group input {
+    flex: 1;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.input-group button {
+    padding: 10px 20px;
+    background-color: #4facfe;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+.input-group button:hover {
+    background-color: #00f2fe;
+}

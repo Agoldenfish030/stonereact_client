@@ -1,0 +1,56 @@
+/*===[PART6: loginout page style, class*9]===============================================================================================*/
+
+.login-page {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    /* 現代感漸層背景 */
+    background: linear-gradient(135deg, #f4f7f6 0%, #3e5770 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 2000;
+}
+
+.login-glass {
+    background: rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px); /* 關鍵：毛玻璃效果 */
+    padding: 50px;
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    width: 350px;
+    text-align: center;
+    color: white;
+}
+
+.login-header h2 { 
+    margin-top: 10px;
+    margin-bottom: 10px; 
+    font-size: 2rem; 
+}
+
+.login-header p { 
+    font-size: 0.9rem; 
+    margin-bottom: 30px; 
+    opacity: 0.8; 
+}
+
+.login-submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: #7692b5;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.login-submit-btn:hover { 
+    transform: scale(1.02); background: #8fbfaf; 
+}
+

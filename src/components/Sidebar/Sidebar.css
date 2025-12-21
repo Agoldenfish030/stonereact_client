@@ -1,0 +1,98 @@
+/*===[PART2: sidebar, class*11+2]===============================================================================================*/
+
+/* 修改後的 .sidebar */
+.sidebar {
+    /* 1. 基礎寬度與過渡 */
+    width: 200px; 
+    flex-shrink: 0; 
+    transition: width 0.3s ease;
+    height: 100vh;
+    position: sticky;
+    background: #38546f repeat left top;
+    background-size: 100% auto;
+    top: 0;
+
+    color: white;
+    padding: 0px 10px;
+    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    display: flex;
+    z-index: 100;
+}
+
+.sidebar-header {
+    padding-top: 43px;
+    padding-left: 15px;
+    opacity: 1;
+    transition: opacity 0.3s ease; /* 讓它淡入/淡出，但沒有延遲 */
+}
+
+.menu-list {
+    padding-left: 10px;
+    list-style-type: none;
+    opacity: 1; /*透明度*/
+    transition: opacity 0.3s ease;
+}
+
+/* 選單列表樣式 */
+.menu-list a {
+    display: flex; /* 使用 Flexbox 讓圖示和文字對齊 */
+    align-items: center;
+    text-decoration: none;
+    color: inherit; /* 繼承父層的白色 */
+    padding: 10px;
+    border-radius: 4px;
+    gap: 10px;
+}
+
+/* 圖示間距 */
+.menu-list i {
+    margin-right: 15px; /* 增加圖示和文字之間的距離 */
+    width: 20px; /* 確保圖示佔用固定寬度，保持文字對齊 */
+    text-align: center;
+    flex-wrap: 20px;
+}
+
+.menu-list li:hover {
+    background-color: #34495e;
+    text-decoration: underline #ffffff;
+}
+
+/* 側邊欄內部內容的容器 */
+.sidebar-content {
+    /* 選單標題、選項等內容 */
+    opacity: 1;
+    visibility: visible;
+    white-space: nowrap;
+    overflow: hidden; 
+    text-overflow: ellipsis;
+
+}
+
+/* 側邊欄收合狀態 */
+.sidebar.collapsed {
+    width: 70px;
+    padding: 0px;
+}
+
+/* 側邊欄收合時隱藏內容 */
+.sidebar.collapsed .sidebar-content {
+    opacity: 0; /* 內容淡出 */
+    visibility: hidden; /* 確保內容不被點擊 */
+    pointer-events: none;
+}
+
+/* 按鈕樣式 */
+.toggle-btn {
+    position: fixed;
+    top: 15px;
+    left: 15px;
+    z-index: 1000; /* 確保按鈕在最上層 */
+    background: #38546f;
+    color: white;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    border-radius: 4px;
+    transition: left 0.3s ease;
+}
