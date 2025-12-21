@@ -1,4 +1,5 @@
-const logInLink = async()=>{
+const logInLink = async(e)=>{
+    if (e && e.preventDefault) e.preventDefault();
     try{
         const response = await fetch("https://toomuchstonestodo.onrender.com/logInLink");
         const link = await response.json();
