@@ -20,7 +20,7 @@ const UserToken = ()=>{
             sessionStorage.setItem('userState', state);
 
             //登入成功後跳轉回主畫面
-            navigate('https://agoldenfish030.github.io/#/');
+            navigate('https://stonereact-client.vercel.app/');
         }
     }, [navigate]);
 }
