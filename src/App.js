@@ -32,7 +32,7 @@ function App() {
 
     const [themeColor, setThemeColor] = useState(() => {
         const saved = localStorage.getItem('app_themeColor');
-        return saved ? saved : '#f4f7f6';
+        return saved ? saved : '#dadadfff';
     });
 
     // 存檔：當所有狀態改變時執行
@@ -61,15 +61,13 @@ function App() {
 
             // 先把 XP 歸位到剩下的餘數
             setXp(leftovers);
-            // 再增加等級
             setLevel(prev => prev + levelUps);
 
-            // 確保前面的 alert 關掉後才跳出這個
             setTimeout(() => {
                 alert(`恭喜升級！目前的等級是 Lv.${Number(level) + levelUps}`);
             }, 300);
         }
-    }, [xp, level]); // 只有 xp 變動時才會跑檢查
+    }, [xp, level]);
 
     return (
         <div 
@@ -84,7 +82,6 @@ function App() {
             <Router>
                 <Layout>
                     <Routes>
-                        {/* 確保這一行存在，路徑要跟網址對應 */}
                         <Route path="/authority" element={<Authority />} />
 
                         <Route path="/" element={
@@ -96,7 +93,6 @@ function App() {
                             />
                         } />
                         
-                        {/* 將設定狀態傳入 Setting 組件 */}
                         <Route path="/setting" element={
                             <Setting
                                 name={name}

@@ -4,7 +4,7 @@
 body {
     margin: 0;
     font-family: 'Press Start 2P';
-    color: #333;
+    color: #dadadfff;
 }
 
 /* 整個容器 */
@@ -14,7 +14,6 @@ body {
     max-width: 100vw;
     overflow: hidden;
 }
-
 
 /*===[PART3: main area, class*3]===============================================================================================*/
 
@@ -32,10 +31,12 @@ body {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    overflow-y: auto;
-    
-    flex: 1; /* 兩區塊平均分配空間 */
+    flex: 1;
     min-width: 0; /* 確保在小螢幕上可以正確收縮 */
+}
+
+.todo-list-area {
+    overflow-y: auto;
 }
 
 .todo-list-area h2, .game-area h2{
@@ -46,8 +47,8 @@ body {
     display: flex;
     gap: 15px;
     width: 95%;
-    padding: 8px 12px;  /* ✨ 減薄厚度，讓輸入框更靠近頂部 */
-    margin-top: 0;      /* 確保沒有額外推力 */
+    padding: 8px 12px;
+    margin-top: 0;
 }
 
 @media (max-width: 768px) {
@@ -57,8 +58,8 @@ body {
         left: 0;
         width: 200px;
         height: 100vh;
-        z-index: 1000; /* 數字要比卡片大 */
-        background-color: #38546f; /* 確保有背景色，才不會看到下面的卡片 */
+        z-index: 1000;
+        background-color: #38546f;
         transition: width 0.3s ease;
         /* 這裡要根據你的 isCollapsed 狀態來決定 transform */
     }
@@ -88,4 +89,19 @@ body {
     }
 
 
+}
+
+:root {
+    /* 核心色調：取自登入頁的漸層與按鈕色 */
+    --main-gradient: linear-gradient(135deg, #f4f7f6 0%, #d1d9e0 100%);
+    --glass-bg: rgba(255, 255, 255, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --accent-blue: #7692b5; /* 登入按鈕色 */
+    --text-dark: #496784; /* 標題深藍色 */
+}
+
+body {
+    background: var(--main-gradient); /* 全域背景統一 */
+    color: var(--text-dark);
+    min-height: 100vh;
 }

@@ -1,22 +1,20 @@
 import React from 'react';
-
-//to backend
+import './Authority.css';
 import userToken from '../controlToken/getUserToken';
+//to backend
 
 const Log = () => {
     userToken();
 
     return (
-        <div style={{ 
-            display: 'flex', 
-            textAlign: 'center', 
-            justifyContent: 'center', 
-            alignItems: 'center', 
-            height: '100vh' // 加上這行，它就會從頂部跳到螢幕正中間
-        }}>
-            <h2 style={{ fontSize: '60px' }}>
-                授權中...
-            </h2>
+        <div className="auth-loading-page">
+            <div className="auth-glass-card">
+                <div className="pixel-spinner">
+                    <div className="spinner-block"></div>
+                </div>
+                <h2 className="auth-text">授權中</h2>
+                <p className="auth-subtext">正在與 Trello 進行安全連線...</p>
+            </div>
         </div>
     )
 }

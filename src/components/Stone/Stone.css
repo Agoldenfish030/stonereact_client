@@ -1,0 +1,13 @@
+.pixel-stone {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  transition: transform 0.1s ease-out;
+  z-index: 10;
+  filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.3));
+}
+
+.pixel-stone img {
+  width: 100%;
+  image-rendering: pixelated; /* 關鍵：確保像素圖在縮放時不會模糊 */
+}

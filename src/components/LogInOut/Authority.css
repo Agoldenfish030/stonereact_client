@@ -1,0 +1,55 @@
+.auth-loading-page {
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(135deg, #f4f7f6 0%, #d1d9e0 100%);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3000;
+}
+
+.auth-glass-card {
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(12px);
+    padding: 60px;
+    border-radius: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    text-align: center;
+    width: 320px;
+}
+
+.auth-text {
+    color: #496784;
+    font-size: 1.8rem;
+    margin: 20px 0 10px;
+    letter-spacing: 2px;
+}
+
+.auth-subtext {
+    color: #7692b5;
+    font-size: 0.9rem;
+    opacity: 0.8;
+}
+
+.pixel-spinner {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.spinner-block {
+    width: 30px;
+    height: 30px;
+    background-color: #7692b5;
+    box-shadow: 6px 6px 0px rgba(0, 0, 0, 0.1);
+    animation: pixel-jump 0.8s infinite alternate ease-in-out;
+}
+
+@keyframes pixel-jump {
+    from { transform: translateY(0); }
+    to { transform: translateY(-20px); }
+}

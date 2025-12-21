@@ -1,0 +1,50 @@
+import React, { useState, useEffect, useRef } from 'react';
+import stoneImg from './babystone.png';
+import './Stone.css';
+
+const Stone = () => {
+
+        const [position, setPosition] = useState({ x: 250, y: 150 });
+        const containerRef = useRef(null);
+
+        useEffect(() => {
+            const moveInterval = setInterval(() => {
+            setPosition((prev) => {
+                const dx = (Math.floor(Math.random() * 3) - 1) * 30;
+                const dy = (Math.floor(Math.random() * 3) - 1) * 30;
+
+                const containerWidth = containerRef.current ? containerRef.current.offsetWidth : 400;
+                const containerHeight = containerRef.current ? containerRef.current.offsetHeight : 400;
+
+                const stoneSize = 88; 
+                const maxWidth = containerWidth - stoneSize;
+                const maxHeight = containerHeight - stoneSize;
+
+                let nextX = prev.x + dx;
+                let nextY = prev.y + dy;
+                nextX = Math.max(0, Math.min(nextX, maxWidth)); 
+                nextY = Math.max(0, Math.min(nextY, maxHeight));
+
+                return { x: nextX, y: nextY };
+            });
+        }, 1000);
+
+        // 清除計時器防止記憶體洩漏
+        return () => clearInterval(moveInterval);
+    }, []);
+
+    return (
+        <div className="stone-wrapper" ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
+            <div 
+                className="pixel-stone"
+                style={{ 
+                    transform: `translate(${position.x}px, ${position.y}px)` 
+                }}
+            >
+                <img src={stoneImg} alt="pixel-stone" />
+            </div>
+        </div>
+    );
+};
+
+export default Stone;

@@ -8,15 +8,20 @@
     transition: width 0.3s ease;
     height: 100vh;
     position: sticky;
-    background: #38546f repeat left top;
+    /*background: #38546f repeat left top; */
     background-size: 100% auto;
     top: 0;
-
     color: white;
     padding: 0px 10px;
-    box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    /*box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);*/
     display: flex;
     z-index: 100;
+
+    backdrop-filter: blur(15px);
+    border-right: 0.5px solid var(--glass-border);
+    background: #3c556d repeat left top;
+    box-shadow: none;
+    color: var(--text-dark);
 }
 
 .sidebar-header {
@@ -53,19 +58,24 @@
 }
 
 .menu-list li:hover {
-    background-color: #34495e;
-    text-decoration: underline #ffffff;
+    /*background-color: #34495e;*/
+    /*text-decoration: underline #ffffff;*/
+
+    background-color: rgba(255, 255, 255, 0.3);
+    /*color: var(--accent-blue);*/
+    text-decoration: none;
 }
 
 /* 側邊欄內部內容的容器 */
 .sidebar-content {
     /* 選單標題、選項等內容 */
+    font-weight: bold;
     opacity: 1;
     visibility: visible;
     white-space: nowrap;
     overflow: hidden; 
     text-overflow: ellipsis;
-
+    color: #ffffff;
 }
 
 /* 側邊欄收合狀態 */
@@ -87,7 +97,7 @@
     top: 15px;
     left: 15px;
     z-index: 1000; /* 確保按鈕在最上層 */
-    background: #38546f;
+    background: #3c556d;
     color: white;
     border: none;
     padding: 10px;

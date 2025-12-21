@@ -9,7 +9,7 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
             <div className="settings-card">
                 <h2><Settings className="header-icon"/> 個人化設定</h2>
                 
-                {/* 1. 角色資訊 (你原本的功能) */}
+                {/* 角色資訊 */}
                 <div className="settings-section">
                     <h3>角色資訊</h3>
                     <div className="input-group">
@@ -24,7 +24,7 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
                     </div>
                 </div>
 
-                {/* 2. 顯示設定 (新加入的全域功能) */}
+                {/* 顯示設定  */}
                 <div className="settings-section">
                     <h3>顯示設定</h3>
                     <div className="setting-item">
@@ -40,13 +40,13 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
                     </div>
                 </div>
 
-                {/* 3. 視覺主題 (新加入的全域功能) */}
+                {/* 視覺主題 */}
                 <div className="settings-section">
                     <h3>視覺主題</h3>
                     <div className="setting-item">
                         <label>切換背景色</label>
                         <div className="color-picker-group">
-                            {['#f4f7f6', '#fff5f5', '#e7f5ff', '#fef9e7'].map(color => (
+                            {['#eff6f3ff', '#fff5f5', '#e7f5ff', '#fef9e7', '#dadadfff', '#070706ff'].map(color => (
                                 <button 
                                     key={color}
                                     className={`color-dot ${themeColor === color ? 'active' : ''}`}
@@ -58,7 +58,7 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
                     </div>
                 </div>
 
-                {/* 4. 遊戲偏好 (你原本的功能) */}
+                {/* 遊戲偏好 */}
                 <div className="settings-section">
                     <h3>遊戲偏好</h3>
                     <div className="checkbox-group">
@@ -71,7 +71,7 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
                     </div>
                 </div>
 
-                {/* 5. 操作按鈕 */}
+                {/* 儲存變更 */}
                 <div className="button-group">
                     <button className="save-btn" onClick={onSave}>
                         儲存變更

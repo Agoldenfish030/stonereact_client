@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import TodoCard from '../TodoCard/TodoCard';
 import mockTrelloTasks from '../TodoCard/MockData';
-import './Home.css'; // 確保這就是你上面那份 CSS 的檔名
+import Stone from '../Stone/Stone';
+import './Home.css';
 
 const HomeContent = ({ name, xp, level, onTaskComplete }) => {
     const [tasks, setTasks] = useState(mockTrelloTasks);
@@ -76,8 +77,9 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
                     </div>
                 </div>
 
-                <div className="placeholder" style={{ border: '2px dashed #ccc', height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#999' }}>
-                    角色/進度條佔位圖
+                {/* 確保容器是 relative，石頭的 absolute 才會生效 */}
+                <div style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden' }}>
+                    <Stone />
                 </div>
             </section>
 
