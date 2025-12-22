@@ -7,11 +7,10 @@ import { Gamepad2, ClipboardList } from 'lucide-react';
 
 const HomeContent = ({ name, xp, level, onTaskComplete }) => {
     const [tasks, setTasks] = useState(mockTrelloTasks);
-    // 在 HomeContent 內部新增：
-    const [inputValue, setInputValue] = useState('');     // 任務名稱
-    const [inputTag, setInputTag] = useState('');         // 標籤
-    const [inputDate, setInputDate] = useState('');       // 截止日期
-    const [inputXP, setInputXP] = useState(20);           // 自訂 XP，預設 20
+    const [inputValue, setInputValue] = useState(''); 
+    const [inputTag, setInputTag] = useState('');
+    const [inputDate, setInputDate] = useState('');
+    const [inputXP, setInputXP] = useState(20);
 
     const taskComplete = (taskId) => {
         const targetTask = tasks.find(t => t.id === taskId);
@@ -35,24 +34,23 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
     const addTask = () => {
         if (!inputValue.trim()) return;
 
-        // ✨ 處理 XP 上限邏輯
         let xpVal = parseInt(inputXP, 10);
-        if (isNaN(xpVal)) xpVal = 20; // 如果沒填或填錯，預設 20
-        if (xpVal > 150) xpVal = 150; // 強制上限 150
+        if (isNaN(xpVal)) xpVal = 20;
+        if (xpVal > 150) xpVal = 150;
         if (xpVal < 0) xpVal = 0;
 
         const newTask = {
             id: Date.now(),
             title: inputValue,
-            tag: inputTag || "一般",        // 沒填標籤就給預設值
-            dueDate: inputDate || "未定",   // 沒填日期就給預設值
+            tag: inputTag || "一般",
+            dueDate: inputDate || "未定",
             xpValue: xpVal,
             isCompleted: false
         };
 
         setTasks([...tasks, newTask]);
         
-        // ✨ 重設所有輸入框
+        // 重設所有輸入框
         setInputValue('');
         setInputTag('');
         setInputDate('');
@@ -60,15 +58,12 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
     };
 
     return (
-        /* 外層對應 .main-content，實現左右分割 */
         <div className="main-content">
             
-            {/* 左側：遊戲養成區域 */}
             <section className="game-area">
                 <h2><Gamepad2 className = 'game-header-icon'/> 遊戲進度</h2>
                 
-                {/* 經驗值條面板 (我們沿用之前的結構，但放在 game-area 內) */}
-                <div className="stat-panel" style={{ background: '#ced5deff', color: 'white', padding: '15px', borderRadius: '8px', marginBottom: '20px' }}>
+                <div className="stat-panel">
                     <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
                         <span>Lv. {level}</span>
                         <span>{xp} / 100 XP</span>
@@ -84,13 +79,11 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
                 </div>
             </section>
 
-            {/* 右側：代辦清單區域 */}
             <section className="todo-list-area">
                 <h2><ClipboardList className = 'list-header-icon'/> 待辦清單</h2>
     
                 <div className="add-task-section" style={{ marginBottom: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                     
-                    {/* 第一行：任務名稱 */}
                     <input 
                         value={inputValue} 
                         onChange={(e) => setInputValue(e.target.value)}
@@ -98,7 +91,6 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
                         style={{ flex: 1, padding: '8px' }}
                     />
 
-                    {/* 第二行：標籤、日期、XP、發佈按鈕 */}
                     <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
                         <input 
                             value={inputTag} 

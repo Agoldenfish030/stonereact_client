@@ -1,4 +1,4 @@
-/*===[PART1: whole space, class*2]===============================================================================================*/
+/*===[ whole space ]===============================================================================================*/
 
 /* 基礎樣式 */
 body {
@@ -15,11 +15,11 @@ body {
     overflow: hidden;
 }
 
-/*===[PART3: main area, class*3]===============================================================================================*/
+/*===[ main area ]===============================================================================================*/
 
 .main-content {
-    display: flex; /* 左右兩區塊分割 */
-    flex-grow: 1; /* 佔據剩餘所有寬度 */
+    display: flex;
+    flex-grow: 1;
     padding: 15px 18px;
     gap: 30px;
     transition: margin-left 0.3s ease;
@@ -74,7 +74,7 @@ body {
         z-index: 1000;
         background-color: #38546f;
         transition: width 0.3s ease;
-        /* 這裡要根據你的 isCollapsed 狀態來決定 transform */
+        /* 根據 isCollapsed 狀態來決定 transform */
     }
 
     .sidebar.collapsed {
@@ -85,14 +85,13 @@ body {
         transform: translateX(0); /* 展開時滑入 */
     }
 
-    /* 手機版內容區塊不需要側邊欄的內距 */
+    /* 手機版內容區塊不需要側邊欄內距 */
     .main-content.sidebar-collapsed-padding,
     .main-content.expanded-padding {
         padding-left: 20px;
         width: 100%;
     }
 
-    /* 顯示一個明顯的漢堡選單按鈕 */
     .toggle-btn {
         display: block;
         position: fixed;

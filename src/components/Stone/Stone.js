@@ -4,7 +4,7 @@ import './Stone.css';
 
 const Stone = () => {
         
-        const [position, setPosition] = useState({ x: 120, y: 70 });
+        //const [position, setPosition] = useState({ x: 120, y: 70 });
         /*
         const containerRef = useRef(null);
 
@@ -39,7 +39,7 @@ const Stone = () => {
         <div className="stone-wrapper" /*ref={containerRef}*/ style={{ width: '100%', height: '100%', position: 'relative' }}>
             <div 
                 className="pixel-stone"
-                ///*
+                /*
                 style={{ 
                     transform: `translate(${position.x}px, ${position.y}px)` 
                 }}

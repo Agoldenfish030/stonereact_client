@@ -1,4 +1,3 @@
-// TodoCard.js
 import React from 'react';
 import './TodoCard.css';
 import { Tag, Clock, CircleCheck, Circle } from 'lucide-react';
@@ -13,7 +12,7 @@ const TodoCard = ({ task, onComplete }) => {
     const priorityClass = (task.priority || 'medium').toLowerCase();
 
     return (
-        // 卡片主體：根據是否完成，套用不同的樣式
+        // 根據是否完成，套用不同的樣式
         <div className={`todo-card ${task.isCompleted ? 'completed' : ''} priority-${priorityClass}`}>
         
         <div className="card-header">
@@ -29,26 +28,19 @@ const TodoCard = ({ task, onComplete }) => {
         </div>
 
         {!task.isCompleted && (
-            <button 
-            className="complete-btn" 
+            <button className="complete-btn" 
             // 點擊後執行父組件傳入的完成函式，並傳入任務ID
             onClick={() => onComplete(task.id)}
             >
-            <Circle size={16} />
-            未完成
+                <Circle size={16} />
+                未完成
             </button>
         )}
 
         {task.isCompleted && (
-            
-            <button 
-            className="completed-btn" 
-            >
-            <CircleCheck size={16} />
-            已完成
+            <button className="completed-btn" >
+                <CircleCheck size={16} />已完成
             </button>
-
-            //<div className="completed-badge">已完成</div>
         )}
 
         </div>

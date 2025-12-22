@@ -8,9 +8,6 @@ import Setting from './components/Setting/Setting';
 import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
 
-//for fish
-import checkWindow from './components/controlToken/checkWindow';
-
 function App() {
     // 遊戲核心狀態
     const [xp, setXp] = useState(() => {
@@ -41,13 +38,13 @@ function App() {
 
     const [notification, setNotification] = useState(() => {
         const saved = localStorage.getItem('deadline_notification');
-        if (saved === null) return true; // 沒存過時的預設值
+        if (saved === null) return true;
         return saved === 'true';
     })
 
     const [finished, setFinished] = useState(() => {
         const saved = localStorage.getItem('show_finished');
-        if (saved === null) return true; // 沒存過時的預設值
+        if (saved === null) return true;
         return saved === 'true';
     })
 
@@ -82,7 +79,7 @@ function App() {
                 localStorage.setItem('unlocked_achievements', JSON.stringify(unlocked));
                 
                 setTimeout(() => {
-                    alert(`🏆 獲得成就：${m.title}`);
+                    alert(`獲得成就：${m.title}`);
                 }, 1000);
             }
         });

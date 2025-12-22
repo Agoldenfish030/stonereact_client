@@ -1,9 +1,7 @@
-// Sidebar.js
 import React from 'react';
 import './Sidebar.css';
 import { Link } from 'react-router-dom';
 import {Stone, Award, Settings, Wrench, LogOut} from 'lucide-react';
-// CSS 在 Layout.js 中引入，Sidebar 只負責樣式套用
 
 const menuItems = [
   { id: 1, icon: <Stone color = 'lightgrey'/>, label: '主頁', link: '/' },
@@ -29,7 +27,6 @@ const Sidebar = ({ isCollapsed }) => {
                 {menuItems.map(item => (
                 <li key={item.id} className={item.active ? 'active' : ''}>
                     <Link to = {item.link}>
-                        {/* 注意：i 標籤在 React 中仍使用 className */}
                         {item.icon}
                         {item.label}
                     </Link>

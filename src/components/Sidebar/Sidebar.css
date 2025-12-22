@@ -1,8 +1,4 @@
-/*===[PART2: sidebar, class*11+2]===============================================================================================*/
-
-/* 修改後的 .sidebar */
 .sidebar {
-    /* 1. 基礎寬度與過渡 */
     width: 200px; 
     flex-shrink: 0; 
     transition: width 0.3s ease;
@@ -28,7 +24,7 @@
     padding-top: 43px;
     padding-left: 15px;
     opacity: 1;
-    transition: opacity 0.3s ease; /* 讓它淡入/淡出，但沒有延遲 */
+    transition: opacity 0.3s ease; /* 淡入/淡出 */
 }
 
 .menu-list {
@@ -38,37 +34,29 @@
     transition: opacity 0.3s ease;
 }
 
-/* 選單列表樣式 */
 .menu-list a {
-    display: flex; /* 使用 Flexbox 讓圖示和文字對齊 */
+    display: flex;
     align-items: center;
     text-decoration: none;
-    color: inherit; /* 繼承父層的白色 */
+    color: inherit;
     padding: 10px;
     border-radius: 4px;
     gap: 10px;
 }
 
-/* 圖示間距 */
 .menu-list i {
-    margin-right: 15px; /* 增加圖示和文字之間的距離 */
-    width: 20px; /* 確保圖示佔用固定寬度，保持文字對齊 */
+    margin-right: 15px;
+    width: 20px;
     text-align: center;
     flex-wrap: 20px;
 }
 
 .menu-list li:hover {
-    /*background-color: #34495e;*/
-    /*text-decoration: underline #ffffff;*/
-
     background-color: rgba(255, 255, 255, 0.3);
-    /*color: var(--accent-blue);*/
     text-decoration: none;
 }
 
-/* 側邊欄內部內容的容器 */
 .sidebar-content {
-    /* 選單標題、選項等內容 */
     font-weight: bold;
     opacity: 1;
     visibility: visible;
@@ -78,7 +66,7 @@
     color: #ffffff;
 }
 
-/* 側邊欄收合狀態 */
+/* 側邊欄收合 */
 .sidebar.collapsed {
     width: 70px;
     padding: 0px;
@@ -86,17 +74,16 @@
 
 /* 側邊欄收合時隱藏內容 */
 .sidebar.collapsed .sidebar-content {
-    opacity: 0; /* 內容淡出 */
-    visibility: hidden; /* 確保內容不被點擊 */
+    opacity: 0;
+    visibility: hidden; /* 內容不被點擊 */
     pointer-events: none;
 }
 
-/* 按鈕樣式 */
 .toggle-btn {
     position: fixed;
     top: 15px;
     left: 15px;
-    z-index: 1000; /* 確保按鈕在最上層 */
+    z-index: 1000;
     background: #3c556d;
     color: white;
     border: none;
