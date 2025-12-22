@@ -1,7 +1,8 @@
 window.addEventListener('load', ()=>{});
 
 window.addEventListener('beforeunload', async()=>{
-    const state = sessionStorage.getItem('userState');
+    const stateObj = sessionStorage.getItem('userState');
+    const state = stateObj.json();
     const response = await fetch('https://toomuchstonestodo.onrender.com/userToken', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
