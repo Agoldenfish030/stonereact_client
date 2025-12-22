@@ -7,7 +7,7 @@
     justify-content: center;
     align-items: center;
     /* 現代感漸層背景 */
-    background: linear-gradient(135deg, #f4f7f6 0%, #3e5770 100%);
+    background: linear-gradient(150deg, #f4f7f6 0%, #273d53 100%);
     position: fixed;
     top: 0;
     left: 0;
@@ -51,6 +51,6 @@
 }
 
 .login-submit-btn:hover { 
-    transform: scale(1.02); background: #8fbfaf; 
+    transform: scale(1.02); background: #81ac9d; 
 }
 

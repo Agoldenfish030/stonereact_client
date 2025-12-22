@@ -3,8 +3,9 @@ import stoneImg from './babystone.png';
 import './Stone.css';
 
 const Stone = () => {
-
-        const [position, setPosition] = useState({ x: 250, y: 150 });
+        
+        const [position, setPosition] = useState({ x: 120, y: 70 });
+        /*
         const containerRef = useRef(null);
 
         useEffect(() => {
@@ -32,14 +33,17 @@ const Stone = () => {
         // 清除計時器防止記憶體洩漏
         return () => clearInterval(moveInterval);
     }, []);
+    //*/
 
     return (
-        <div className="stone-wrapper" ref={containerRef} style={{ width: '100%', height: '100%', position: 'relative' }}>
+        <div className="stone-wrapper" /*ref={containerRef}*/ style={{ width: '100%', height: '100%', position: 'relative' }}>
             <div 
                 className="pixel-stone"
+                ///*
                 style={{ 
                     transform: `translate(${position.x}px, ${position.y}px)` 
                 }}
+                //*/
             >
                 <img src={stoneImg} alt="pixel-stone" />
             </div>

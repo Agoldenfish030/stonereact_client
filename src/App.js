@@ -63,10 +63,35 @@ function App() {
         alert('設定已儲存！');
     };
 
+    const checkAchievementUnlocks = (count) => {
+        const unlocked = JSON.parse(localStorage.getItem('unlocked_achievements') || '[]');
+        
+        // 定義成就門檻
+        const milestones = [
+            { id: 1, count: 1, title: '初出茅廬' },
+            { id: 4, count: 30, title: '小有成就' },
+        ];
+
+        milestones.forEach(m => {
+            if (count >= m.count && !unlocked.includes(m.id)) {
+                unlocked.push(m.id);
+                // 儲存新的成就清單
+                localStorage.setItem('unlocked_achievements', JSON.stringify(unlocked));
+                
+                alert(`🏆 獲得成就：${m.title}`); 
+            }
+        });
+    };
+
     // 處理獲得經驗與升級
     const handleTaskComplete = (xpGain, taskTitle) => {
         alert(`任務:「${taskTitle}」已完成！獲得經驗值！`);
         setXp(prev => Number(prev) + Number(xpGain));
+
+        const currentCount = Number(localStorage.getItem('total_completed_tasks') || 0);
+        const newCount = currentCount + 1;
+        localStorage.setItem('total_completed_tasks', newCount);
+        checkAchievementUnlocks(newCount);
     };
 
     useEffect(() => {
