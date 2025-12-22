@@ -61,7 +61,7 @@
     align-items: center;
 }
 
-/* 第一行元件比例 */
+/* 第一行比例 */
 .input-name { 
     flex: 3; 
     padding: 8px; 
@@ -75,7 +75,7 @@
     border: 1px solid #ccc;
 }
 
-/* 第二行元件比例 */
+/* 第二行比例 */
 .input-date { 
     flex: 1.5; 
     padding: 6px; 
@@ -121,7 +121,6 @@
     gap: 15px;
 }
 
-/* 像素風格按鈕 */
 .pixel-btn {
     flex: 1;
     padding: 8px 15px;

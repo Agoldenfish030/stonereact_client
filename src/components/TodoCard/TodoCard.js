@@ -8,13 +8,11 @@ const TodoCard = ({ task, onComplete, onDelete }) => {
         ? new Date(task.dueDate).toLocaleDateString('zh-TW') 
         : '無截止日';
 
-    // 治本修正：防止 priority 為 undefined 導致崩潰
     const priorityClass = (task.priority || 'medium').toLowerCase();
 
     return (
         <div className={`todo-card ${task.isCompleted ? 'completed' : ''} priority-${priorityClass}`} style={{ position: 'relative' }}>
             
-            {/* 刪除按鈕：點擊後會先彈出確認視窗 */}
             <button 
                 className="delete-task-btn"
                 onClick={() => {
@@ -29,7 +27,6 @@ const TodoCard = ({ task, onComplete, onDelete }) => {
 
             <div className="card-header">
                 <h4 className="card-title">{task.title}</h4>
-                {/* 顯示標籤名，若無則顯示 task.tag */}
                 <span className="list-tag"><Tag size={14}/>{task.listName || task.tag || "一般"}</span>
             </div>
 

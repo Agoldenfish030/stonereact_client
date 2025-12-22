@@ -25,10 +25,9 @@
     filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
 }
 
-/* 手機版縮放優化 */
 @media (max-width: 768px) {
     .stone-image {
-        max-width: 180px; /* 手機版讓石頭稍微小一點，留空間給清單 */
+        max-width: 180px;
     }
     .stone-wrapper {
         min-height: 200px;

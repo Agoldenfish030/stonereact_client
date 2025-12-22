@@ -1,4 +1,4 @@
-// 用於 TodoCard 測試
+// TodoCard 測試
 
 const mockTrelloTasks = [
     {

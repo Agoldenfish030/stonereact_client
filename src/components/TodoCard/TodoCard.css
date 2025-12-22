@@ -2,14 +2,14 @@
     background-color: #dadadfff;
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin: 5px 10px 15px; /* 增加底部間距避免擁擠 */
+    margin: 5px 10px 15px;
     padding-left: 8px;
     padding-right: 8px;
     gap: 5px;
     display: flex;
 
     position: relative;
-    padding-bottom: 48px; /* 為底部按鈕留空間 */
+    padding-bottom: 48px; 
     flex-direction: column;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -19,12 +19,10 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* 優先級顏色：根據 App 傳入的 priorityClass 變化 */
 .todo-card.priority-high { border-left: 5px solid #f5a0a0; }
 .todo-card.priority-medium { border-left: 5px solid #fae19b; }
 .todo-card.priority-low { border-left: 5px solid #baf6c8; }
 
-/* 刪除按鈕樣式 */
 .delete-task-btn {
     position: absolute;
     top: 8px;
@@ -57,7 +55,7 @@
     display: block;
     font-size: 1.1rem;
     color: #333;
-    max-width: 70%; /* 防止文字撞到右邊的 meta 資料 */
+    max-width: 70%;
 }
 
 .list-tag {
@@ -76,7 +74,7 @@
 
 .card-meta {
     top: 10px;
-    right: 40px; /* 這裡預留 40px 避開右邊的刪除按鈕 */
+    right: 40px;
     position: absolute;
     display: flex;
     gap: 8px;
@@ -115,7 +113,7 @@
 
 .complete-btn:hover {
     background-color: #f0f4f8;
-    text-decoration: none; /* 原本的 underline 較老氣，改用背景變色 */
+    text-decoration: none;
     transform: scale(1.05);
 }
 
@@ -129,7 +127,7 @@
 /* RWD 響應式優化 */
 @media (max-width: 1000px) {
     .todo-card {
-        align-items: flex-start; /* 手機版改為靠左對齊較符合習慣 */
+        align-items: flex-start;
         text-align: left;
         padding: 15px;
         padding-bottom: 60px;
