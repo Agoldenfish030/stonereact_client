@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom';
 window.addEventListener('load', ()=>{
     const location = useLocation();
     const pathname = location.pathname;
