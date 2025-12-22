@@ -4,7 +4,7 @@ import './Award.css';
 import { Award, Trophy, Star, Target, Zap } from 'lucide-react';
 
 const Achievement = () => {
-    // 讀取目前已解鎖的 ID 陣列 (這裡要對應 App.js 存入的格式)
+    // 讀取目前已解鎖的 ID 陣列 (對應 App.js 存入的格式)
     const unlockedList = JSON.parse(localStorage.getItem('unlocked_achievements') || '[]');
 
     const achievements = [

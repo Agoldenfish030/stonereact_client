@@ -78,7 +78,9 @@ function App() {
                 // 儲存新的成就清單
                 localStorage.setItem('unlocked_achievements', JSON.stringify(unlocked));
                 
-                alert(`🏆 獲得成就：${m.title}`); 
+                setTimeout(() => {
+                    alert(`🏆 獲得成就：${m.title}`);
+                }, 1000);
             }
         });
     };
