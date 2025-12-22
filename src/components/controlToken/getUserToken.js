@@ -8,6 +8,7 @@ const UserToken = ()=>{
     // 從網址 hash 中抓取 token (#token=xxxx)
         const hash = window.location.hash;
         const token = new URLSearchParams(hash.replace('#', '?')).get('token');
+        console.log(token);
 
         if (token){
             // 傳送到 Express 後端
