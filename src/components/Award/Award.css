@@ -14,6 +14,7 @@
     border-radius: 20px;
     padding: 20px 40px 40px;
     color: #496784;
+    overflow-y: auto;
 }
 
 .achievement-card h2 {

@@ -52,7 +52,6 @@
     padding-bottom: 8px;
 }
 
-/* 讓每一項設定左右排開，比較協調 */
 .setting-item {
     display: flex;
     justify-content: space-between;

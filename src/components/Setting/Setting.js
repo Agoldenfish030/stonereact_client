@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import './Setting.css';
 import { Settings } from 'lucide-react';
 
-const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setThemeColor, onSave }) => {
+const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setThemeColor, notification, setNotification, finished, setFinished , onSave }) => {
 
     return (
         <div className="settings-page-wrapper">
             <div className="settings-card">
                 <h2><Settings className="header-icon"/> 個人化設定</h2>
                 
-                {/* 角色資訊 */}
                 <div className="settings-section">
                     <h3>角色資訊</h3>
                     <div className="input-group">
@@ -24,7 +23,6 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
                     </div>
                 </div>
 
-                {/* 顯示設定  */}
                 <div className="settings-section">
                     <h3>顯示設定</h3>
                     <div className="setting-item">
@@ -40,7 +38,6 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
                     </div>
                 </div>
 
-                {/* 視覺主題 */}
                 <div className="settings-section">
                     <h3>視覺主題</h3>
                     <div className="setting-item">
@@ -58,20 +55,28 @@ const SettingsStyle = ({ name, setName, fontSize, setFontSize, themeColor, setTh
                     </div>
                 </div>
 
-                {/* 遊戲偏好 */}
                 <div className="settings-section">
                     <h3>遊戲偏好</h3>
                     <div className="checkbox-group">
-                        <input type="checkbox" id="notifications" defaultChecked />
+                        <input
+                            type="checkbox"
+                            id="notifications"
+                            checked={notification}
+                            onChange = { (e) => (setNotification(e.target.checked))}
+                        />
                         <label htmlFor="notifications"> 任務截止提醒</label>
                     </div>
                     <div className="checkbox-group">
-                        <input type="checkbox" id="sound" />
-                        <label htmlFor="sound"> 顯示已完成任務</label>
+                        <input 
+                            type="checkbox"
+                            id="finished"
+                            checked={finished}
+                            onChange = { (e) => (setFinished(e.target.checked))}
+                        />
+                        <label htmlFor="finished"> 顯示已完成任務</label>
                     </div>
                 </div>
 
-                {/* 儲存變更 */}
                 <div className="button-group">
                     <button className="save-btn" onClick={onSave}>
                         儲存變更

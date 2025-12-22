@@ -36,6 +36,18 @@ function App() {
         return saved ? saved : '#dadadfff';
     });
 
+    const [notification, setNotification] = useState(() => {
+        const saved = localStorage.getItem('deadline_notification');
+        if (saved === null) return true; // 沒存過時的預設值
+        return saved === 'true';
+    })
+
+    const [finished, setFinished] = useState(() => {
+        const saved = localStorage.getItem('show_finished');
+        if (saved === null) return true; // 沒存過時的預設值
+        return saved === 'true';
+    })
+
     // 存檔：當所有狀態改變時執行
     useEffect(() => {
         localStorage.setItem('game_xp', xp);
@@ -46,6 +58,8 @@ function App() {
         localStorage.setItem('game_user_name', name);
         localStorage.setItem('app_fontSize', fontSize);
         localStorage.setItem('app_themeColor', themeColor);
+        localStorage.setItem('deadline_notification', notification);
+        localStorage.setItem('show_finished', finished);
         alert('設定已儲存！');
     };
 
@@ -104,6 +118,10 @@ function App() {
                                 setFontSize={setFontSize}
                                 themeColor={themeColor} 
                                 setThemeColor={setThemeColor}
+                                notification={notification}
+                                setNotification={setNotification}
+                                finished={finished}
+                                setFinished={setFinished}
                                 onSave={handleSave}
                             />
                         } />
