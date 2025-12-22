@@ -11,7 +11,7 @@ const UserToken = ()=>{
 
         if (token){
             // 傳送到 Express 後端
-            const response = await fetch('https://toomuchstonestodo.onrender.com/userToken', {
+            const response = await fetch('https://toomuchstonestodo.onrender.com/userToken/add', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token })
