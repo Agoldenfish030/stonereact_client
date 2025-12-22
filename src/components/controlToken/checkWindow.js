@@ -1,6 +1,11 @@
-window.addEventListener('load', ()=>{});
+const Load = window.addEventListener('load', ()=>{
+    const path = window.location.pathname;
+    if(!sessionStorage.length && (path != '/LogInOut' || path != '/LogInOut/')){
+        window.location.replace('https://stonereact-client.vercel.app/LogInOut');
+    }
+});
 
-window.addEventListener('beforeunload', async()=>{
+const DeleteToken = window.addEventListener('beforeunload', async()=>{
     const state = sessionStorage.getItem('userState');
     const response = await fetch('https://toomuchstonestodo.onrender.com/userToken', {
         method: 'DELETE',
@@ -8,3 +13,5 @@ window.addEventListener('beforeunload', async()=>{
         body: JSON.stringify({state})
     });
 });
+
+export default {Load, DeleteToken};

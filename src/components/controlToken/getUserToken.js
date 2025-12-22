@@ -13,7 +13,8 @@ const UserToken = ()=>{
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token })
             });
-            const state = await response.json();
+            const stateObj = await response.json();
+            const state = stateObj.userState;
             sessionStorage.setItem('userState', state);
 
             //登入成功後跳轉回主畫面
