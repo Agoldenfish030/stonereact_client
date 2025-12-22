@@ -1,8 +1,8 @@
-import { useLocation } from 'react-router-dom';
 const Load = window.addEventListener('load', ()=>{
-    //const location = useLocation();
-    //const pathname = location.pathname;
-    //if(!sessionStorage.length && pathname != '/LogInOut') window.location.replace('https://stonereact-client.vercel.app/LogInOut');
+    const path = window.location.pathname;
+    if(!sessionStorage.length && (path != '/LogInOut' || path != '/LogInOut/')){
+        window.location.replace('https://stonereact-client.vercel.app/LogInOut');
+    }
 });
 
 const DeleteToken = window.addEventListener('beforeunload', async()=>{
