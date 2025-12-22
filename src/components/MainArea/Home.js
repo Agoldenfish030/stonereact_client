@@ -1,16 +1,40 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import TodoCard from '../TodoCard/TodoCard';
 import mockTrelloTasks from '../TodoCard/MockData';
 import Stone from '../Stone/Stone';
 import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 
-const HomeContent = ({ name, xp, level, onTaskComplete }) => {
-    const [tasks, setTasks] = useState(mockTrelloTasks);
+const HomeContent = ({ xp, level, onTaskComplete }) => {
+    // 從 localStorage 讀取已存任務
+    const [tasks, setTasks] = useState(() => {
+        const savedTasks = localStorage.getItem('local_tasks');
+        
+        if (savedTasks) {
+            return JSON.parse(savedTasks);
+        } else {
+            return [{
+                id: 'example-1',
+                title: '範例卡片！',
+                tag: '指南',
+                dueDate: new Date().toISOString().split('T')[0], // 預設今日
+                xpValue: 10,
+                isCompleted: false,
+                priority: 'medium'
+            }];
+        }
+    });
+
     const [inputValue, setInputValue] = useState(''); 
     const [inputTag, setInputTag] = useState('');
     const [inputDate, setInputDate] = useState('');
     const [inputXP, setInputXP] = useState(20);
+    const [inputPriority, setInputPriority] = useState('medium'); 
+
+    // 每當 tasks 改變時自動同步
+    useEffect(() => {
+        localStorage.setItem('local_tasks', JSON.stringify(tasks));
+    }, [tasks]);
 
     const taskComplete = (taskId) => {
         const targetTask = tasks.find(t => t.id === taskId);
@@ -19,7 +43,6 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
         if (onTaskComplete) {
             const xpToSubmit = parseInt(targetTask.xpValue, 10) || 20;
             const titleToSubmit = targetTask.title || "未命名任務";
-
             onTaskComplete(xpToSubmit, titleToSubmit);
         }
 
@@ -28,11 +51,14 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
                 task.id === taskId ? { ...task, isCompleted: true } : task
             )
         );
-        
     };
 
-    const addTask = () => {
-        if (!inputValue.trim()) return;
+    const deleteTask = (taskId) => {
+        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+    };
+
+    const addTask = (e) => {
+        e.preventDefault(); // 啟用 HTML5 驗證
 
         let xpVal = parseInt(inputXP, 10);
         if (isNaN(xpVal)) xpVal = 20;
@@ -43,89 +69,106 @@ const HomeContent = ({ name, xp, level, onTaskComplete }) => {
             id: Date.now(),
             title: inputValue,
             tag: inputTag || "一般",
-            dueDate: inputDate || "未定",
+            dueDate: inputDate,
             xpValue: xpVal,
-            isCompleted: false
+            isCompleted: false,
+            priority: inputPriority 
         };
 
         setTasks([...tasks, newTask]);
         
-        // 重設所有輸入框
         setInputValue('');
         setInputTag('');
         setInputDate('');
         setInputXP(20);
+        setInputPriority('medium');
     };
 
     return (
         <div className="main-content">
-            
             <section className="game-area">
-                <h2><Gamepad2 className = 'game-header-icon'/> 遊戲進度</h2>
-                
+                <h2><Gamepad2 className='game-header-icon'/> 遊戲進度</h2>
                 <div className="stat-panel">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px' }}>
+                    <div className="stat-info">
                         <span>Lv. {level}</span>
                         <span>{xp} / 100 XP</span>
                     </div>
-                    <div style={{ width: '100%', height: '10px', background: '#7a797986', borderRadius: '5px', marginTop: '8px', overflow: 'hidden' }}>
-                        <div style={{ width: `${xp}%`, height: '100%', background: '#50728fff', transition: 'width 0.3s' }}></div>
+                    <div className="progress-bar">
+                        <div className="progress-fill" style={{ width: `${xp}%` }}></div>
                     </div>
                 </div>
-
-                {/* 確保容器是 relative，石頭的 absolute 才會生效 */}
-                <div style={{ position: 'relative', height: '100%', width: '100%', overflow: 'hidden' }}>
+                <div className="stone-container">
                     <Stone />
                 </div>
             </section>
 
             <section className="todo-list-area">
-                <h2><ClipboardList className = 'list-header-icon'/> 待辦清單</h2>
+                <h2><ClipboardList className='list-header-icon'/> 待辦清單</h2>
     
-                <div className="add-task-section" style={{ marginBottom: '20px', padding: '15px', background: '#f9f9f9', borderRadius: '8px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                    
-                    <input 
-                        value={inputValue} 
-                        onChange={(e) => setInputValue(e.target.value)}
-                        placeholder="新增任務名稱..."
-                        style={{ flex: 1, padding: '8px' }}
-                    />
-
-                    <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
+                <form className="add-task-form" onSubmit={addTask}>
+                    {/* 第一行：名稱與標籤 */}
+                    <div className="form-row">
                         <input 
+                            className="input-name"
+                            value={inputValue} 
+                            onChange={(e) => setInputValue(e.target.value)}
+                            placeholder="新增任務名稱..."
+                            required 
+                        />
+                        <input 
+                            className="input-tag"
                             value={inputTag} 
                             onChange={(e) => setInputTag(e.target.value)}
                             placeholder="標籤 (如：運動)"
-                            style={{ flex: 1, padding: '5px' }}
                         />
+                    </div>
+
+                    {/* 第二行：日期、優先級、XP 與按鈕 */}
+                    <div className="form-row">
                         <input 
                             type="date"
+                            className="input-date"
                             value={inputDate} 
                             onChange={(e) => setInputDate(e.target.value)}
-                            style={{ flex: 1, padding: '5px' }}
+                            required
                         />
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
-                            <span style={{ fontSize: '12px', color: '#666' }}>XP:</span>
+                        
+                        <select 
+                            className={`input-priority ${inputPriority}`}
+                            value={inputPriority} 
+                            onChange={(e) => setInputPriority(e.target.value)}
+                        >
+                            <option value="low">優先度低</option>
+                            <option value="medium">優先度中</option>
+                            <option value="high">優先度高</option>
+                        </select>
+
+                        <div className="xp-input-group">
+                            <span>XP:</span>
                             <input 
                                 type="number"
                                 value={inputXP} 
                                 onChange={(e) => setInputXP(e.target.value)}
                                 max="150"
-                                placeholder="20"
-                                style={{ width: '60px', padding: '5px' }}
                             />
                         </div>
-                        <button onClick={addTask} className="pixel-btn">發佈</button>
+                        <button type="submit" className="pixel-btn">發佈</button>
                     </div>
-                </div>
+                </form>
 
                 <div className="card-list">
-                    {/* 只顯示未完成任務 */}
+                    {tasks.length === 0 || (
+                        <div className="empty-tasks-hint">
+                            <p>目前沒有任務，請新增卡片！</p>
+                        </div>
+                    )}
+
                     {tasks.filter(t => !t.isCompleted).map(task => (
                         <TodoCard 
                             key={task.id} 
                             task={task} 
-                            onComplete={taskComplete} 
+                            onComplete={taskComplete}
+                            onDelete={deleteTask} 
                         />
                     ))}
                 </div>

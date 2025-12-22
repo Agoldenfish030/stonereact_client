@@ -1,21 +1,27 @@
-/*===[ whole space ]===============================================================================================*/
-
-/* 基礎樣式 */
-body {
-    margin: 0;
-    font-family: 'Press Start 2P';
-    color: #dadadfff;
+/*===[ root & body ]===============================================================================================*/
+:root {
+    --main-gradient: linear-gradient(135deg, #f4f7f6 0%, #d1d9e0 100%);
+    --glass-bg: rgba(255, 255, 255, 0.4);
+    --glass-border: rgba(255, 255, 255, 0.3);
+    --accent-blue: #7692b5;
+    --text-dark: #496784;
 }
 
-/* 整個容器 */
+body {
+    margin: 0;
+    background: var(--main-gradient);
+    color: var(--text-dark);
+    min-height: 100vh;
+    overflow-x: hidden; /* 防止全域左右滑動 */
+}
+
+/*===[ Layout ]=====================================================================================================*/
 .app-container {
     display: flex;
     height: 100vh;
     max-width: 100vw;
     overflow: hidden;
 }
-
-/*===[ main area ]===============================================================================================*/
 
 .main-content {
     display: flex;
@@ -24,72 +30,146 @@ body {
     gap: 30px;
     transition: margin-left 0.3s ease;
     background-color: transparent;
+    overflow-x: hidden; /* 確保內容區不產生水平滾動 */
+    box-sizing: border-box;
 }
 
+/*===[ Areas ]======================================================================================================*/
 .game-area, .todo-list-area {
     padding: 25px;
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     flex: 1;
-    min-width: 0; /* 確保在小螢幕上可以正確收縮 */
+    min-width: 0; /* 防止子元件撐開寬度 */
 }
 
 .todo-list-area {
     overflow-y: auto;
 }
 
-.todo-list-area h2, .game-area h2{
+.game-area h2, .todo-list-area h2 {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 8px;
     justify-content: center;
-    margin-top: 20px;
-    margin-bottom: 30px;
+    margin-top: 10px;
+    margin-bottom: 25px;
+}
+
+.todo-list-area h2 {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 .game-header-icon, .list-header-icon {
     width: 1.1em;
     height: 1.1em;
-    stroke-width: 2px; 
-    transition: all ease;
-    color: rgb(114, 92, 154);
+    stroke-width: 2px;
+    color: var(--text-dark);
 }
 
-.add-task-section {
+/*===[ Task Form - 兩行式佈局 ]=====================================================================================*/
+.add-task-form {
     display: flex;
-    gap: 15px;
-    width: 95%;
-    padding: 8px 12px;
-    margin-top: 0;
+    flex-direction: column;
+    gap: 12px;
+    padding: 15px;
+    background: var(--glass-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 8px;
+    margin-top: 5px;
+    margin-bottom: 20px;
+    width: 100%;
+    box-sizing: border-box; /* 確保 padding 不撐開寬度 */
 }
 
+.form-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+}
+
+.input-name { 
+    flex: 3; 
+}
+
+.input-tag { 
+    flex: 1; 
+}
+
+.input-date, .input-priority { 
+    flex: 1.5; 
+}
+
+.xp-input-group { 
+    flex: 1; 
+    display: flex; 
+    align-items: center; 
+    gap: 5px; 
+}
+
+.add-task-form input, .add-task-form select {
+    padding: 8px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/*===[ Components ]=================================================================================================*/
+.empty-tasks-hint {
+    padding: 30px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px dashed rgba(118, 146, 181, 0.4);
+    border-radius: 12px;
+    color: var(--accent-blue);
+    width: 85%;
+    max-width: 500px;
+    margin: 10px auto;
+}
+
+/*===[ RWD Mobile ]====================================================================================*/
 @media (max-width: 768px) {
+    .app-container {
+        overflow-y: auto;
+        height: auto;
+    }
+
+    .main-content {
+        flex-direction: column;
+        padding: 10px;
+        gap: 20px;
+    }
+
+    .game-area, .todo-list-area {
+        width: 100%;
+        padding: 15px;
+    }
+
+    .form-row {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .input-name, .input-tag, .input-date, .input-priority, .xp-input-group, .pixel-btn {
+        width: 100%;
+        flex: none;
+    }
+
     .sidebar {
         position: fixed;
-        top: 0;
-        left: 0;
         width: 200px;
-        height: 100vh;
         z-index: 1000;
-        background-color: #38546f;
-        transition: width 0.3s ease;
-        /* 根據 isCollapsed 狀態來決定 transform */
+        transition: transform 0.3s ease;
     }
-
+    
     .sidebar.collapsed {
-        width: 0px;
-    }
-
-    .sidebar.active {
-        transform: translateX(0); /* 展開時滑入 */
-    }
-
-    /* 手機版內容區塊不需要側邊欄內距 */
-    .main-content.sidebar-collapsed-padding,
-    .main-content.expanded-padding {
-        padding-left: 20px;
-        width: 100%;
+        transform: translateX(-100%);
     }
 
     .toggle-btn {
@@ -99,19 +179,4 @@ body {
         left: 15px;
         z-index: 2000;
     }
-}
-
-:root {
-    /* 核心色調：取自登入頁的漸層與按鈕色 */
-    --main-gradient: linear-gradient(135deg, #f4f7f6 0%, #d1d9e0 100%);
-    --glass-bg: rgba(255, 255, 255, 0.4);
-    --glass-border: rgba(255, 255, 255, 0.3);
-    --accent-blue: #7692b5; /* 登入按鈕色 */
-    --text-dark: #496784; /* 標題深藍色 */
-}
-
-body {
-    background: var(--main-gradient); /* 全域背景統一 */
-    color: var(--text-dark);
-    min-height: 100vh;
 }

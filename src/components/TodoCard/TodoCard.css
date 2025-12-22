@@ -1,24 +1,63 @@
 .todo-card {
-    background-color: #e3f0ff;
+    background-color: #dadadfff;
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    margin: 5px 10px 5px;
+    margin: 5px 10px 15px; /* 增加底部間距避免擁擠 */
     padding-left: 8px;
+    padding-right: 8px;
     gap: 5px;
     display: flex;
 
     position: relative;
-    padding-bottom: 48px;
+    padding-bottom: 48px; /* 為底部按鈕留空間 */
     flex-direction: column;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.todo-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 優先級顏色：根據 App 傳入的 priorityClass 變化 */
+.todo-card.priority-high { border-left: 5px solid #f5a0a0; }
+.todo-card.priority-medium { border-left: 5px solid #fae19b; }
+.todo-card.priority-low { border-left: 5px solid #baf6c8; }
+
+/* 刪除按鈕樣式 */
+.delete-task-btn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: transparent;
+    border: none;
+    color: #ff6b6b;
+    cursor: pointer;
+    opacity: 0.3; /* 平時淡化，不干擾視覺 */
+    transition: all 0.2s ease;
+    padding: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 5;
+}
+
+.delete-task-btn:hover {
+    opacity: 1;
+    transform: scale(1.2);
+    color: #c34d57;
 }
 
 .card-header h4 {
     margin: 0;
 }
 
-.card-title{
+.card-title {
     padding-top: 8px;
     display: block;
+    font-size: 1.1rem;
+    color: #333;
+    max-width: 70%; /* 防止文字撞到右邊的 meta 資料 */
 }
 
 .list-tag {
@@ -28,85 +67,100 @@
     display: flex;
     align-items: center;
     gap: 2px;
+    font-size: 12px;
+    color: #555;
+    background: rgba(255, 255, 255, 0.5);
+    padding: 2px 6px;
+    border-radius: 4px;
 }
 
 .card-meta {
     top: 10px;
-    right: 15px;
+    right: 40px; /* 這裡預留 40px 避開右邊的刪除按鈕 */
     position: absolute;
     display: flex;
-    gap: 5px;
-    font-size: 14px;
-    color: grey;
+    gap: 8px;
+    font-size: 13px;
+    color: #777;
     align-items: center;
 }
 
 .xp-value {
     background-color: #f1f8ff;
     color: #5f87ba;
-    padding: 2px 6px;
+    padding: 2px 8px;
     border-radius: 12px;
     font-weight: bold;
     border: 1px solid #c8e1ff;
 }
 
-.complete-btn {
-    padding: 3px;
+/* 按鈕共用樣式 */
+.complete-btn, .completed-btn {
+    padding: 4px 10px;
     border-radius: 4px;
-    border-width: 1px;
-    border-color: #7692b5;
-    box-shadow: 0 2px 4px grey(0, 0, 0, 5);
+    border: 1px solid #7692b5;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
-    gap: 2px;
+    gap: 4px;
+    cursor: pointer;
+    font-size: 13px;
 
     position: absolute;
     bottom: 10px;
     right: 15px;
+    transition: all 0.2s;
 }
 
 .complete-btn:hover {
-    text-decoration: underline;
+    background-color: #f0f4f8;
+    text-decoration: none; /* 原本的 underline 較老氣，改用背景變色 */
+    transform: scale(1.05);
 }
 
 .completed-btn {
-    padding: 3px;
-    border-radius: 4px;
-    border-width: 1px;
-    border-color: #7692b5;
-    box-shadow: 0 2px 4px grey(0, 0, 0, 5);
-    display: flex;
-    align-items: center;
-    gap: 2px;
-
-    position: absolute;
-    bottom: 10px;
-    right: 15px;
+    background-color: #e8f5e9;
+    color: #2e7d32;
+    border-color: #a5d6a7;
+    cursor: default;
 }
 
+/* RWD 響應式優化 */
 @media (max-width: 1000px) {
     .todo-card {
-        align-items: center;
-        text-align: center;
+        align-items: flex-start; /* 手機版改為靠左對齊較符合習慣 */
+        text-align: left;
         padding: 15px;
-        
+        padding-bottom: 60px;
     }
 
-    .card-header, .card-footer {
-        flex-direction: column;
-        align-items: center;
-        width: 100%;
+    .card-title {
+        max-width: 100%;
     }
 
-    .list-tag, .card-meta {
-        justify-content: center;
+    .card-meta {
         position: static;
+        margin-top: 5px;
+        margin-bottom: 10px;
+    }
+
+    .delete-task-btn {
+        top: 15px;
+        right: 15px;
+        opacity: 0.8; /* 手機版不容易 hover，直接顯示 */
+    }
+
+    .list-tag {
+        position: static;
+        display: inline-flex;
+        margin-top: 10px;
     }
 
     .complete-btn, .completed-btn {
-        position: static; /* 確保按鈕不會浮在別人上面 */
-        width: 80%;
-        justify-content: center;
-        padding: 10px;
+        position: absolute;
+        bottom: 15px;
+        right: 15px;
+        width: auto;
     }
 }

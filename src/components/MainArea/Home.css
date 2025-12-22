@@ -1,14 +1,10 @@
-.home-container {
+.main-content {
     padding: 20px;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
 }
 
-/* 角色面板樣式 */
+/* 遊戲與統計面板 */
 .stat-panel {
-    background: #ced5deff;
+    background: rgb(191, 198, 206);
     color: white;
     padding: 15px;
     border-radius: 8px;
@@ -20,60 +16,147 @@
     justify-content: space-between;
     margin-bottom: 10px;
     font-weight: bold;
+    font-size: 14px;
 }
 
 .progress-bar {
     width: 100%;
-    height: 20px;
-    background: #636e72;
-    border-radius: 10px;
+    height: 12px;
+    background: #7a797986;
+    border-radius: 6px;
     overflow: hidden;
 }
 
 .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #4facfe 0%, #00f2fe 100%);
+    background: #50728fff;
     transition: width 0.3s ease;
 }
 
-/* 列表區 */
-.card-list {
-    display: grid;
-    gap: 15px;
-    margin-top: 15px;
+.stone-container {
+    position: relative;
+    height: 300px; /* 給石頭足夠的高度展示 */
     width: 100%;
+    overflow: hidden;
 }
 
-/* 新增任務 */
-.add-task-section {
-    margin-top: 25px;
-    padding-top: 25px;
-    border-top: 1px solid #ddd;
+/* 待辦清單表單結構 */
+.add-task-form {
+    margin-top: 0px;
+    margin-bottom: 10px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(10px);
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.input-group {
+.form-row {
     display: flex;
     gap: 10px;
-    margin-top: 10px;
+    width: 100%;
+    align-items: center;
 }
 
-.input-group input {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
+/* 第一行元件比例 */
+.input-name { 
+    flex: 3; 
+    padding: 8px; 
+    border-radius: 4px; 
+    border: 1px solid #ccc;
+}
+.input-tag { 
+    flex: 1; 
+    padding: 8px; 
+    border-radius: 4px; 
     border: 1px solid #ccc;
 }
 
-.input-group button {
-    padding: 10px 20px;
-    background-color: #4facfe;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
+/* 第二行元件比例 */
+.input-date { 
+    flex: 1.5; 
+    padding: 6px; 
+    border-radius: 4px; 
+    border: 1px solid #ccc;
+}
+.input-priority { 
+    flex: 1.5; 
+    padding: 6px; 
+    border-radius: 4px; 
+    border: 1px solid #ccc;
+}
+.input-priority.low { 
+    background-color: #baf6c8;
+}
+.input-priority.medium { 
+    background-color: #fae19b;
+}
+.input-priority.high { 
+    background-color: #f5a0a0;
 }
 
-.input-group button:hover {
-    background-color: #00f2fe;
+.xp-input-group {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+    color: #666;
+}
+
+.xp-input-group input {
+    width: 100%;
+    padding: 6px;
+    border-radius: 4px;
+    border: 1px solid #ccc;
+}
+
+/* 清單佈局 */
+.card-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 15px;
+}
+
+/* 像素風格按鈕 */
+.pixel-btn {
+    flex: 1;
+    padding: 8px 15px;
+    background-color: #50728fff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: transform 0.1s;
+}
+
+.pixel-btn:active {
+    transform: scale(0.95);
+    box-shadow: none;
+}
+
+.empty-tasks-hint {
+    grid-column: 1;
+    padding: 40px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.2);
+    border: 2px dashed rgba(118, 146, 181, 0.4); /* 虛線框增加引導感 */
+    border-radius: 12px;
+    color: #50728fff;
+    font-weight: bold;
+    backdrop-filter: blur(5px); /* 毛玻璃效果 */
+    margin-top: 10px;
+
+    width: 80%; 
+    margin: 15px auto;
+}
+
+.empty-tasks-hint p {
+    margin: 0;
+    font-size: 16px;
+    letter-spacing: 1px;
 }
