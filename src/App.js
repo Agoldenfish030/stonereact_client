@@ -9,9 +9,7 @@ import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
 
 //for fish
-import checkWindow from './components/controlToken/checkWindow';
-
-checkWindow();
+import {Load, DeleteToken} from './components/controlToken/checkWindow';
 
 function App() {
     // 遊戲核心狀態
