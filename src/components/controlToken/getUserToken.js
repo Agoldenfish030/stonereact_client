@@ -1,9 +1,6 @@
 import { useEffect } from "react";
-import { useNavigate as UseNavigate } from 'react-router-dom';
 
 const UserToken = ()=>{
-    const navigate = UseNavigate();
-
     useEffect(async() => {
     // 從網址 hash 中抓取 token (#token=xxxx)
         const hash = window.location.hash;
@@ -20,9 +17,9 @@ const UserToken = ()=>{
             sessionStorage.setItem('userState', state);
 
             //登入成功後跳轉回主畫面
-            navigate('https://stonereact-client.vercel.app/');
+            window.location.replace('https://stonereact-client.vercel.app/');
         }
-    }, [navigate]);
+    });
 }
 
 export default UserToken;
