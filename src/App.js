@@ -9,7 +9,7 @@ import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
 
 //for fish
-import {DeleteToken} from './components/controlToken';
+import {DeleteToken} from './components/controlToken/checkWindow';
 DeleteToken();
 
 function App() {
