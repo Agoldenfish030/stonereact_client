@@ -1,9 +1,9 @@
-const Load = window.addEventListener('load', ()=>{
-    const path = window.location.pathname;
-    if(!sessionStorage.length && (path != '/LogInOut' || path != '/LogInOut/')){
-        window.location.replace('https://stonereact-client.vercel.app/LogInOut');
-    }
-});
+//const Load = window.addEventListener('load', ()=>{
+//    const path = window.location.pathname;
+//    if(!sessionStorage.length && (path != '/LogInOut' || path != '/LogInOut/')){
+//        window.location.replace('https://stonereact-client.vercel.app/LogInOut');
+//    }
+//});
 
 const DeleteToken = window.addEventListener('beforeunload', async()=>{
     if(sessionStorage.length){
@@ -16,4 +16,4 @@ const DeleteToken = window.addEventListener('beforeunload', async()=>{
     }
 });
 
-export default {Load, DeleteToken};
+export default { DeleteToken};
