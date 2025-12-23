@@ -8,7 +8,7 @@ import { Gamepad2, ClipboardList } from 'lucide-react';
 const HomeContent = ({ xp, level, onTaskComplete }) => {
 
     const today = new Date().toISOString().split('T')[0];
-    
+
     // 從 localStorage 讀取已存任務
     const [tasks, setTasks] = useState(() => {
         const savedTasks = localStorage.getItem('local_tasks');
@@ -43,17 +43,31 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
         const targetTask = tasks.find(t => t.id === taskId);
         if (!targetTask) return;
 
+        const today = new Date().toISOString().split('T')[0];
+        const updatedTasks = tasks.map(task =>
+            task.id === taskId 
+                ? { ...task, isCompleted: true, completedDate: today } 
+                : task
+        );
+
         if (onTaskComplete) {
             const xpToSubmit = parseInt(targetTask.xpValue, 10) || 20;
             const titleToSubmit = targetTask.title || "未命名任務";
             onTaskComplete(xpToSubmit, titleToSubmit);
         }
 
-        setTasks(prevTasks => 
-            prevTasks.map(task =>
-                task.id === taskId ? { ...task, isCompleted: true } : task
-            )
-        );
+        setTasks(updatedTasks);
+
+        // 過濾出今天完成的所有任務
+        const completedTodayCount = updatedTasks.filter(task => 
+            task.isCompleted && task.completedDate === today
+        ).length;
+
+        if (completedTodayCount === 5) {
+            setTimeout(() => {
+                alert(`獲得成就：效率達人`);
+            }, 1000);
+        }
     };
 
     const deleteTask = (taskId) => {
