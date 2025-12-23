@@ -1,26 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import TodoCard from '../TodoCard/TodoCard';
-import mockTrelloTasks from '../TodoCard/MockData';
 import Stone from '../Stone/Stone';
 import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 
 const HomeContent = ({ xp, level, onTaskComplete }) => {
+    // 取得當天日期字串
+    const todayString = new Date().toISOString().split('T')[0];
 
-    const today = new Date().toISOString().split('T')[0];
-
-    // 從 localStorage 讀取已存任務
+    // 載入任務
     const [tasks, setTasks] = useState(() => {
         const savedTasks = localStorage.getItem('local_tasks');
-        
         if (savedTasks) {
             return JSON.parse(savedTasks);
         } else {
             return [{
                 id: 'example-1',
-                title: '範例卡片！',
+                title: '範例卡片',
                 tag: '指南',
-                dueDate: new Date().toISOString().split('T')[0], // 預設今日
+                dueDate: todayString,
                 xpValue: 10,
                 isCompleted: false,
                 priority: 'medium'
@@ -34,7 +32,6 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
     const [inputXP, setInputXP] = useState(20);
     const [inputPriority, setInputPriority] = useState('medium'); 
 
-    // 每當 tasks 改變時自動同步
     useEffect(() => {
         localStorage.setItem('local_tasks', JSON.stringify(tasks));
     }, [tasks]);
@@ -43,12 +40,15 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
         const targetTask = tasks.find(t => t.id === taskId);
         if (!targetTask) return;
 
-        const today = new Date().toISOString().split('T')[0];
+        const todayString = new Date().toISOString().split('T')[0];
         const updatedTasks = tasks.map(task =>
             task.id === taskId 
-                ? { ...task, isCompleted: true, completedDate: today } 
+                ? { ...task, isCompleted: true, completedDate: todayString } 
                 : task
         );
+
+        setTasks(updatedTasks);
+        localStorage.setItem('local_tasks', JSON.stringify(updatedTasks));
 
         if (onTaskComplete) {
             const xpToSubmit = parseInt(targetTask.xpValue, 10) || 20;
@@ -56,18 +56,6 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
             onTaskComplete(xpToSubmit, titleToSubmit);
         }
 
-        setTasks(updatedTasks);
-
-        // 過濾出今天完成的所有任務
-        const completedTodayCount = updatedTasks.filter(task => 
-            task.isCompleted && task.completedDate === today
-        ).length;
-
-        if (completedTodayCount === 5) {
-            setTimeout(() => {
-                alert(`獲得成就：效率達人`);
-            }, 1000);
-        }
     };
 
     const deleteTask = (taskId) => {
@@ -75,12 +63,10 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
     };
 
     const addTask = (e) => {
-        e.preventDefault(); // 啟用 HTML5 驗證
+        e.preventDefault(); // 阻止頁面刷新保持 React 狀態
 
         let xpVal = parseInt(inputXP, 10);
         if (isNaN(xpVal)) xpVal = 20;
-        if (xpVal > 150) xpVal = 150;
-        if (xpVal < 0) xpVal = 0;
 
         const newTask = {
             id: Date.now(),
@@ -94,6 +80,7 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
 
         setTasks([...tasks, newTask]);
         
+        // 清空輸入欄位
         setInputValue('');
         setInputTag('');
         setInputDate('');
@@ -119,11 +106,11 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
                 </div>
             </section>
 
+            {/* 待辦清單區塊 */}
             <section className="todo-list-area">
                 <h2><ClipboardList className='list-header-icon'/> 待辦清單</h2>
     
                 <form className="add-task-form" onSubmit={addTask}>
-                    {/* 第一行：名稱與標籤 */}
                     <div className="form-row">
                         <input 
                             className="input-name"
@@ -140,12 +127,11 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
                         />
                     </div>
 
-                    {/* 第二行：日期、優先級、XP 與按鈕 */}
                     <div className="form-row">
                         <input 
                             type="date" 
                             required 
-                            min={today}
+                            min={todayString} // 限制日期不可選今天之前
                             className="input-date"
                             value={inputDate}
                             onChange={(e) => setInputDate(e.target.value)}
@@ -175,9 +161,9 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
                 </form>
 
                 <div className="card-list">
-                    {tasks.length === 0 || (
+                    {tasks.filter(t => !t.isCompleted).length === 0 && (
                         <div className="empty-tasks-hint">
-                            <p>目前沒有任務，請新增卡片！</p>
+                            <p>目前沒有任務，請新增卡片開始冒險！</p>
                         </div>
                     )}
 

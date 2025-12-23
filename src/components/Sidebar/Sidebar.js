@@ -7,7 +7,7 @@ const menuItems = [
   { id: 1, icon: <Stone color='lightgrey'/>, label: '主頁', link: '/' },
   { id: 2, icon: <Award color='lightgrey'/>, label: '成就＆紀錄', link: '/award' },
   { id: 3, icon: <Settings color='lightgrey'/>, label: '個人化設定', link: '/setting' },
-  { id: 4, icon: <Wrench color='lightgrey'/>, label: '專案說明', link: 'https://drive.google.com/file/d/1GBh0HtunpKIkvpOx1qALvHnFH92GKZ2Q/view?usp=sharing', isExternal: true },
+  { id: 4, icon: <Wrench color='lightgrey'/>, label: '專案說明', link: 'https://drive.google.com/file/d/1H_T5NR3sEFAU6CZr0x_vSM9GIR4vgmIs/view?usp=sharing', isExternal: true },
   { id: 5, icon: <LogOut color='lightgrey'/>, label: '登出', link: '/loginout' },
 ];
 
