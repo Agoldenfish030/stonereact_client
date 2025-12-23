@@ -6,6 +6,9 @@ import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 
 const HomeContent = ({ xp, level, onTaskComplete }) => {
+
+    const today = new Date().toISOString().split('T')[0];
+    
     // 從 localStorage 讀取已存任務
     const [tasks, setTasks] = useState(() => {
         const savedTasks = localStorage.getItem('local_tasks');
@@ -126,11 +129,12 @@ const HomeContent = ({ xp, level, onTaskComplete }) => {
                     {/* 第二行：日期、優先級、XP 與按鈕 */}
                     <div className="form-row">
                         <input 
-                            type="date"
+                            type="date" 
+                            required 
+                            min={today}
                             className="input-date"
-                            value={inputDate} 
+                            value={inputDate}
                             onChange={(e) => setInputDate(e.target.value)}
-                            required
                         />
                         
                         <select 
