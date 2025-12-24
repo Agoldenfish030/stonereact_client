@@ -10,9 +10,11 @@ import Authority from './components/LogInOut/Authority';
 
 //for fish
 import useCheckWindow from './components/controlToken/checkWindow';
-useCheckWindow();
 
 function App() {
+    //for fish
+    useCheckWindow();
+
     // 遊戲核心狀態
     const [xp, setXp] = useState(() => {
         const saved = localStorage.getItem('game_xp');
