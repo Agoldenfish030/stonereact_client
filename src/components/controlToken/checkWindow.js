@@ -13,9 +13,12 @@ const useCheckWindow = ()=>{
 
     useEffect(()=>{
         const removeUser = window.addEventListener('beforeunload', ()=>{
+            const delState = sessionStorage.getItem('userState');
             fetch('https://toomuchstonestodo.onrender.com/userToken', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({state: delState}),
+                keepalive: true
             });
         });
         return ()=>{ window.addEventListener('beforeunload', removeUser) }
