@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const UserToken = ()=>{
+const useUserToken = ()=>{
     useEffect(async() => {
     // 從網址 hash 中抓取 token (#token=xxxx)
         const hash = window.location.hash;
@@ -23,4 +23,4 @@ const UserToken = ()=>{
     });
 }
 
-export default UserToken;
+export default useUserToken;
