@@ -13,10 +13,10 @@ const useCheckWindow = ()=>{
 
     useEffect(()=>{
         const removeUser = window.addEventListener('beforeunload', ()=>{
-            navigator.sendBeacon(
-                'https://toomuchstonestodo.onrender.com/userToken',
-                JSON.stringify({ action: 'DELETE' })
-            );
+            fetch('https://toomuchstonestodo.onrender.com/userToken', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' },
+            });
         });
         return ()=>{ window.addEventListener('beforeunload', removeUser) }
     });
