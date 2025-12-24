@@ -15,7 +15,7 @@ const useCheckWindow = ()=>{
         const removeUser = window.addEventListener('beforeunload', ()=>{
             navigator.sendBeacon(
                 'https://toomuchstonestodo.onrender.com/userToken',
-                JSON.stringify({ method: 'DELETE', headers: { 'Content-Type': 'application/json' }})
+                JSON.stringify({ action: 'DELETE' })
             );
         });
         return ()=>{ window.addEventListener('beforeunload', removeUser) }
