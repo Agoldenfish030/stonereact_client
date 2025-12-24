@@ -1,19 +1,22 @@
-//const Load = window.addEventListener('load', ()=>{
-//    const path = window.location.pathname;
-//    if(!sessionStorage.length && (path != '/LogInOut' || path != '/LogInOut/')){
-//        window.location.replace('https://stonereact-client.vercel.app/LogInOut');
-//    }
-//});
+import { useEffect } from "react";
 
-const DeleteToken = window.addEventListener('beforeunload', async()=>{
-    if(sessionStorage.length){
-        const state = sessionStorage.getItem('userState');
-        const response = await fetch('https://toomuchstonestodo.onrender.com/userToken', {
-            method: 'DELETE',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({state})
+const checkWindow = async()=>{
+    useEffect(()=>{
+        const token = sessionStorage.getItem('userState');
+        if(!token){
+            window.alert("您尚未登入！");
+            window.location.href = 'https://stonereact-client.vercel.app/LogInOut';
+        }
+    });
+
+    useEffect(async()=>{
+        window.addEventListener('beforeunload', async()=>{
+            await fetch('https://toomuchstonestodo.onrender.com/userToken', {
+                method: 'DELETE',
+                headers: { 'Content-Type': 'application/json' }
+            });
         });
-    }
-});
+    });
+}
 
-export default { DeleteToken};
+export default checkWindow;
