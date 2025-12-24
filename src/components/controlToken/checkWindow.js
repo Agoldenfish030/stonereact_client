@@ -3,7 +3,7 @@ import { useEffect } from "react";
 const useCheckWindow = ()=>{
     useEffect(()=>{
         const token = sessionStorage.getItem('userState');
-        if(!token){
+        if(!token && window.location.href != 'https://stonereact-client.vercel.app/LogInOut'){
             window.alert("您尚未登入！");
             window.location.href = 'https://stonereact-client.vercel.app/LogInOut';
         }
