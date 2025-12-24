@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const checkWindow = async()=>{
+const CheckWindow = async()=>{
     useEffect(()=>{
         const token = sessionStorage.getItem('userState');
         if(!token){
@@ -10,13 +10,13 @@ const checkWindow = async()=>{
     });
 
     useEffect(async()=>{
-        window.addEventListener('beforeunload', async()=>{
-            await fetch('https://toomuchstonestodo.onrender.com/userToken', {
-                method: 'DELETE',
-                headers: { 'Content-Type': 'application/json' }
+        return window.addEventListener('beforeunload', async()=>{
+                await fetch('https://toomuchstonestodo.onrender.com/userToken', {
+                    method: 'DELETE',
+                    headers: { 'Content-Type': 'application/json' }
+                });
             });
-        });
     });
 }
 
-export default checkWindow;
+export default CheckWindow;
