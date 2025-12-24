@@ -10,7 +10,7 @@ import Authority from './components/LogInOut/Authority';
 
 //for fish
 import {DeleteToken} from './components/controlToken/checkWindow';
-DeleteToken();
+DeleteToken;
 
 function App() {
     // 遊戲核心狀態
