@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 
-const UserToken = ()=>{
+const useUserToken = ()=>{
     useEffect(async() => {
     // 從網址 hash 中抓取 token (#token=xxxx)
         const hash = window.location.hash;
@@ -8,7 +8,7 @@ const UserToken = ()=>{
 
         if (token){
             // 傳送到 Express 後端
-            const response = await fetch('https://toomuchstonestodo.onrender.com/userToken/add', {
+            const response = await fetch('https://toomuchstonestodo.onrender.com/userToken', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ token })
@@ -23,4 +23,4 @@ const UserToken = ()=>{
     });
 }
 
-export default UserToken;
+export default useUserToken;
