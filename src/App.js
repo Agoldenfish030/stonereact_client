@@ -3,12 +3,18 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 import Layout from './components/MainArea/Layout';
 import Home from './components/MainArea/Home';
-import Award from './components/Award/Award';
+import Award from './components/Achievement/Award';
 import Setting from './components/Setting/Setting';
 import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
 
+// for fish
+import useCheckWindow from './components/controlToken/checkWindow';
+
 function App() {
+    //for fish
+    useCheckWindow();
+
     // 遊戲核心狀態
     const [xp, setXp] = useState(() => {
         const saved = localStorage.getItem('game_xp');
@@ -63,26 +69,42 @@ function App() {
         alert('設定已儲存！');
     };
 
-    const checkAchievementUnlocks = (count) => {
+    const checkAchievementUnlocks = (totalCount) => {
+        // 取得目前已解鎖的 ID 清單
         const unlocked = JSON.parse(localStorage.getItem('unlocked_achievements') || '[]');
         
-        // 定義成就門檻
+        // 2. 為了判定「效率達人」，從 localStorage 抓取今天的任務完成狀況
+        const localTasks = JSON.parse(localStorage.getItem('local_tasks') || '[]');
+        const today = new Date().toISOString().split('T')[0];
+        const completedToday = localTasks.filter(t => t.isCompleted && t.completedDate === today).length;
+
+        // 3. 統一成就定義清單：將條件 (condition) 寫在這裡
         const milestones = [
-            { id: 1, count: 1, title: '初出茅廬' },
-            { id: 4, count: 30, title: '小有成就' },
+            { id: 1, title: '初出茅廬', condition: totalCount >= 1 },
+            { id: 3, title: '效率達人', condition: completedToday >= 10 },
+            { id: 4, title: '小有成就', condition: totalCount >= 30 }
         ];
 
+        let hasNewUnlock = false;
+
+        // 使用單一迴圈檢查所有成就
         milestones.forEach(m => {
-            if (count >= m.count && !unlocked.includes(m.id)) {
+            // 如果滿足條件且尚未解鎖
+            if (m.condition && !unlocked.includes(m.id)) {
                 unlocked.push(m.id);
-                // 儲存新的成就清單
-                localStorage.setItem('unlocked_achievements', JSON.stringify(unlocked));
+                hasNewUnlock = true;
                 
+                // 延遲彈窗，增加獲得成就的驚喜感
                 setTimeout(() => {
                     alert(`獲得成就：${m.title}`);
-                }, 1000);
+                }, 800);
             }
         });
+
+        // 如果有新解鎖，一次性存入 localStorage
+        if (hasNewUnlock) {
+            localStorage.setItem('unlocked_achievements', JSON.stringify(unlocked));
+        }
     };
 
     // 處理獲得經驗與升級
@@ -149,6 +171,7 @@ function App() {
                                 setNotification={setNotification}
                                 finished={finished}
                                 setFinished={setFinished}
+                                onTaskComplete={handleTaskComplete}
                                 onSave={handleSave}
                             />
                         } />

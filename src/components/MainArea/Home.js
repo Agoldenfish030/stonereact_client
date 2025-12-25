@@ -5,7 +5,7 @@ import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 
 const HomeContent = ({ xp, level, onTaskComplete }) => {
-    // 取得當天日期字串
+
     const todayString = new Date().toISOString().split('T')[0];
 
     // 載入任務
