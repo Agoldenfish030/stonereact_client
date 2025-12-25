@@ -14,6 +14,10 @@ const useCheckWindow = ()=>{
     useEffect(()=>{
         const removeUser = window.addEventListener('beforeunload', ()=>{
             const delState = sessionStorage.getItem('userState');
+            if(!delState
+                || window.location.href == 'https://stonereact-client.vercel.app/LogInOut'
+                || window.location.hash.includes('token=')
+            ) return;
             fetch('https://toomuchstonestodo.onrender.com/userToken', {
                 method: 'DELETE',
                 headers: { 'Content-Type': 'application/json' },
@@ -21,7 +25,7 @@ const useCheckWindow = ()=>{
                 keepalive: true
             });
         });
-        return ()=>{ window.addEventListener('beforeunload', removeUser) }
+        return ()=>{ window.removeEventListener('beforeunload', removeUser) }
     });
 }
 
