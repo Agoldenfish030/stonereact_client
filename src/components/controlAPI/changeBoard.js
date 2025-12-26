@@ -4,8 +4,10 @@ const useChangeBoard = async(userState, mainBoardID)=>{
         headers: { 'Content-Type': 'application/json' },
         body: {userState, mainBoardID}
     });
-    const newCardsList = response.newCardsList;
+    const newCardsList = await response.json();
     return newCardsList;
 }
+//return content:
+//newCardsList: object array
 
 export default useChangeBoard;
