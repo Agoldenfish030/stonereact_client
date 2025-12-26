@@ -1,5 +1,8 @@
 const useUpdateBoards = async(userState)=>{
-    const response = await fetch(`https://toomuchstonestodo.onrender.com/userToken/getBoards?userState=${userState}`);
+    const response = await fetch(`https://toomuchstonestodo.onrender.com/userToken/getBoards?userState=${userState}`, {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+    });
     const boardDatas = await response.json();
     return boardDatas;
 }
