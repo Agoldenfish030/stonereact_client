@@ -1,6 +1,7 @@
 /* 全域內容區域 */
 .main-content {
     padding: 20px;
+    position: relative;
 }
 
 /* 遊戲與統計面板 */
@@ -45,7 +46,7 @@
 .todo-header-group {
     position: relative; /* 作為選單絕對定位的參考點 */
     display: flex;
-    justify-content: center; /* 強制內容（標題）水平置中 */
+    justify-content: center; /* 強制標題水平置中 */
     align-items: center;
     margin-bottom: 1.5rem;
     min-height: 50px;
@@ -63,6 +64,7 @@
     right: 0; /* 貼齊右側 */
 }
 
+/* 像素風選擇器 */
 .pixel-select {
     padding: 8px 12px;
     border: 2px solid #7692b5;
@@ -79,7 +81,53 @@
     border-color: #50728fff;
 }
 
-/* 待辦清單表單結構 */
+/* --- 新增：初次登入強制選擇看板樣式 --- */
+.init-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.85); /* 深色背景強調感 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999; /* 確保在最上層 */
+    backdrop-filter: blur(8px); /* 背景模糊增加視覺重點 */
+}
+
+.init-modal {
+    background: white;
+    padding: 40px;
+    border: 4px solid #333;
+    text-align: center;
+    box-shadow: 10px 10px 0px #50728fff; /* 使用主題色陰影 */
+    max-width: 450px;
+    width: 90%;
+}
+
+.init-modal h2 {
+    color: #50728fff;
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+}
+
+.init-modal p {
+    color: #666;
+    margin-bottom: 25px;
+}
+
+.pixel-select-large {
+    width: 100%;
+    padding: 15px;
+    font-size: 1.1rem;
+    border: 3px solid #7692b5;
+    background: #f9fbff;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+/* --- 待辦清單表單結構 --- */
 .add-task-form {
     margin-bottom: 10px;
     padding: 15px;
@@ -99,7 +147,7 @@
     align-items: center;
 }
 
-/* 第一行與第二行輸入框比例 */
+/* 輸入框比例 */
 .input-name { flex: 3; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
 .input-tag { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
 .input-date { flex: 1.5; padding: 6px; border-radius: 4px; border: 1px solid #ccc; }
@@ -161,7 +209,7 @@
     width: 80%;
 }
 
-/* 響應式微調：手機版改為垂直堆疊 */
+/* 響應式微調 */
 @media (max-width: 650px) {
     .todo-header-group {
         flex-direction: column;

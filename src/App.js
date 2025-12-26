@@ -9,11 +9,11 @@ import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
 
 // for fish
-import useCheckWindow from './components/controlToken/checkWindow';
+//import useCheckWindow from './components/controlToken/checkWindow';
 
 function App() {
     //for fish
-    useCheckWindow();
+    //useCheckWindow();
 
     const [userState, setUserState] = useState(() => {
         return sessionStorage.getItem('userState') || ''; // 從登入紀錄抓取 userState
