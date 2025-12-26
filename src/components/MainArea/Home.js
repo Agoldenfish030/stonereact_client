@@ -28,8 +28,11 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
         const fetchInitialData = async () => {
             if (!userState) return;
             try {
+                console.log("開始抓取看板...");
                 // 使用別名後的函式
                 const data = await fetchUpdateBoards(userState); 
+                console.log("API 回傳原始資料:", data);
+                
                 setBoards(data.boardList || []);
                 setCurrentBoard(data.mainBoard || { id: '', name: '未選擇' });
                 setTasks(data.allCards || []); 

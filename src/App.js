@@ -9,11 +9,11 @@ import LogInOut from './components/LogInOut/LogInOut';
 import Authority from './components/LogInOut/Authority';
 
 // for fish
-//import useCheckWindow from './components/controlToken/checkWindow';
+import useCheckWindow from './components/controlToken/checkWindow';
 
 function App() {
     //for fish
-    //useCheckWindow();
+    useCheckWindow();
 
     // 遊戲核心狀態
     const [xp, setXp] = useState(() => {
