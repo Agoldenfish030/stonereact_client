@@ -4,7 +4,7 @@ import Stone from '../Stone/Stone';
 import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 
-// 關鍵修正：使用別名避開 use 開頭的 Hook 命名檢查
+// 使用別名避開 use 開頭的 Hook 命名檢查，確保符合 React 規範
 import { default as fetchUpdateBoards } from '../controlAPI/updateBoards'; 
 import { default as fetchChangeBoard } from '../controlAPI/changeBoard';
 
@@ -23,16 +23,13 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
     const [inputXP, setInputXP] = useState(20);
     const [inputPriority, setInputPriority] = useState('medium'); 
 
-    // 1. 初始化載入：改用 fetchUpdateBoards 呼叫
+    // 1. 初始化載入：從 API 抓取所有看板與當前看板任務
     useEffect(() => {
         const fetchInitialData = async () => {
-            if (!userState) return;
+            if (!userState) return; // 確保有登入狀態才抓取
             try {
-                console.log("開始抓取看板...");
-                // 使用別名後的函式
                 const data = await fetchUpdateBoards(userState); 
-                console.log("API 回傳原始資料:", data);
-                
+                // 設定看板列表、當前看板與卡片任務
                 setBoards(data.boardList || []);
                 setCurrentBoard(data.mainBoard || { id: '', name: '未選擇' });
                 setTasks(data.allCards || []); 
@@ -43,24 +40,24 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
         fetchInitialData();
     }, [userState]);
 
-    // 2. 處理看板切換：改用 fetchChangeBoard 呼叫
+    // 2. 處理看板切換
     const handleBoardChange = async (e) => {
         const newBoardID = e.target.value;
         const selected = boards.find(b => b.id === newBoardID);
         
         if (selected) {
-            setCurrentBoard(selected);
+            setCurrentBoard(selected); // 先更新 UI 看板名稱
             try {
-                // 使用別名後的函式執行 PUT 請求
+                // 呼叫 PUT API 通知後端更換看板
                 const newCardsList = await fetchChangeBoard(userState, newBoardID);
-                setTasks(newCardsList); 
+                setTasks(newCardsList || []); // 更新為新看板的卡片
             } catch (err) {
                 console.error("切換看板失敗:", err);
             }
         }
     };
 
-    // 3. 同步本地存檔 (保留你原本的邏輯)
+    // 3. 同步本地存檔 (保留原本邏輯)
     useEffect(() => {
         if (tasks.length > 0) {
             localStorage.setItem('local_tasks', JSON.stringify(tasks));
@@ -130,7 +127,7 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
 
             <section className="todo-list-area">
                 <div className="todo-header-group">
-                    {/* 標題置中邏輯對應你剛改的 CSS */}
+                    {/* 標題置中邏輯對應 CSS */}
                     <h2><ClipboardList className='list-header-icon'/> 待辦清單</h2>
                     
                     <div className="board-selector">
@@ -139,10 +136,10 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
                             onChange={handleBoardChange}
                             className="pixel-select"
                         >
-                            {/* 修正：預設提示放在 option 內，確保符合 select 語法 */}
+                            {/* 預設提示 option */}
                             <option value="" disabled>請選擇看板</option>
                             
-                            {/* 動態渲染 Trello 看板 */}
+                            {/* 動態渲染 Trello 看板清單 */}
                             {boards.map(board => (
                                 <option key={board.id} value={board.id}>
                                     {board.name}
