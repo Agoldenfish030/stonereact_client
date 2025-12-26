@@ -1,4 +1,3 @@
-// src/components/LogInOuts.js
 import React, { useState } from 'react';
 import './LogInOut.css'
 

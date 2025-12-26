@@ -26,17 +26,16 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         const fetchInitialData = async () => {
             if (!userState) return;
             try {
-                const data = await fetchUpdateBoards(userState); // GET 請求
+                const data = await fetchUpdateBoards(userState);
                 setBoards(data.boardList || []); 
 
-                // 判斷邏輯：若 mainBoard ID 為空，代表是第一次登入或尚未設定
                 if (data.mainBoard && data.mainBoard.id) {
                     setCurrentBoard(data.mainBoard);
                     setTasks(data.allCards || []); 
                     setShowInitSelect(false);
                 } else {
                     setCurrentBoard({ id: '', name: '尚未選擇看板' });
-                    setShowInitSelect(true); // 啟動強制選擇畫面
+                    setShowInitSelect(true);
                 }
             } catch (err) {
                 console.error("API 連線失敗:", err);
@@ -52,9 +51,8 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         const selected = boards.find(b => b.id === newBoardID);
         if (selected) {
             setCurrentBoard(selected);
-            setShowInitSelect(false); // 只要選了就關閉強制畫面
+            setShowInitSelect(false); 
             try {
-                // 發送 PUT 請求同步更新後端的 Main Board
                 const newCardsList = await fetchChangeBoard(userState, newBoardID);
                 setTasks(newCardsList || []); 
             } catch (err) {
@@ -63,7 +61,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         }
     };
 
-    // ... 原本的 taskComplete, deleteTask, addTask 保持不變 ...
     const taskComplete = (taskId) => {
         const targetTask = tasks.find(t => t.id === taskId);
         if (!targetTask) return;

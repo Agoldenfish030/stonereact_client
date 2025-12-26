@@ -3,7 +3,6 @@ import Sidebar from '../Sidebar/Sidebar';
 import './AppStyles.css';
 
 const Layout = ({ children }) => {
-    // 側邊欄收合狀態
     const [isCollapsed, setIsCollapsed] = useState(true);
 
     const handleToggleSidebar = () => {
