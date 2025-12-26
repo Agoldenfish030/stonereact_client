@@ -1,3 +1,4 @@
+/* 全域內容區域 */
 .main-content {
     padding: 20px;
 }
@@ -35,14 +36,51 @@
 
 .stone-container {
     position: relative;
-    height: 300px; /* 給石頭足夠的高度展示 */
+    height: 300px;
     width: 100%;
     overflow: hidden;
 }
 
+/* --- 標題區域：實作標題置中、選單靠右 --- */
+.todo-header-group {
+    position: relative; /* 作為選單絕對定位的參考點 */
+    display: flex;
+    justify-content: center; /* 強制內容（標題）水平置中 */
+    align-items: center;
+    margin-bottom: 1.5rem;
+    min-height: 50px;
+}
+
+.todo-header-group h2 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.board-selector {
+    position: absolute; /* 脫離文檔流，不影響標題置中 */
+    right: 0; /* 貼齊右側 */
+}
+
+.pixel-select {
+    padding: 8px 12px;
+    border: 2px solid #7692b5;
+    background: white;
+    font-family: inherit;
+    border-radius: 4px;
+    cursor: pointer;
+    outline: none;
+    transition: all 0.2s ease;
+}
+
+.pixel-select:hover {
+    background: #f0f4f8;
+    border-color: #50728fff;
+}
+
 /* 待辦清單表單結構 */
 .add-task-form {
-    margin-top: 0px;
     margin-bottom: 10px;
     padding: 15px;
     background: rgba(255, 255, 255, 0.4);
@@ -61,42 +99,15 @@
     align-items: center;
 }
 
-/* 第一行比例 */
-.input-name { 
-    flex: 3; 
-    padding: 8px; 
-    border-radius: 4px; 
-    border: 1px solid #ccc;
-}
-.input-tag { 
-    flex: 1; 
-    padding: 8px; 
-    border-radius: 4px; 
-    border: 1px solid #ccc;
-}
+/* 第一行與第二行輸入框比例 */
+.input-name { flex: 3; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+.input-tag { flex: 1; padding: 8px; border-radius: 4px; border: 1px solid #ccc; }
+.input-date { flex: 1.5; padding: 6px; border-radius: 4px; border: 1px solid #ccc; }
+.input-priority { flex: 1.5; padding: 6px; border-radius: 4px; border: 1px solid #ccc; }
 
-/* 第二行比例 */
-.input-date { 
-    flex: 1.5; 
-    padding: 6px; 
-    border-radius: 4px; 
-    border: 1px solid #ccc;
-}
-.input-priority { 
-    flex: 1.5; 
-    padding: 6px; 
-    border-radius: 4px; 
-    border: 1px solid #ccc;
-}
-.input-priority.low { 
-    background-color: #baf6c8;
-}
-.input-priority.medium { 
-    background-color: #fae19b;
-}
-.input-priority.high { 
-    background-color: #f5a0a0;
-}
+.input-priority.low { background-color: #baf6c8; }
+.input-priority.medium { background-color: #fae19b; }
+.input-priority.high { background-color: #f5a0a0; }
 
 .xp-input-group {
     flex: 1;
@@ -114,7 +125,7 @@
     border: 1px solid #ccc;
 }
 
-/* 清單佈局 */
+/* 清單佈局與按鈕 */
 .card-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -135,27 +146,36 @@
 
 .pixel-btn:active {
     transform: scale(0.95);
-    box-shadow: none;
 }
 
 .empty-tasks-hint {
-    grid-column: 1;
     padding: 40px;
     text-align: center;
     background: rgba(255, 255, 255, 0.2);
-    border: 2px dashed rgba(118, 146, 181, 0.4); /* 虛線框增加引導感 */
+    border: 2px dashed rgba(118, 146, 181, 0.4);
     border-radius: 12px;
     color: #50728fff;
     font-weight: bold;
-    backdrop-filter: blur(5px); /* 毛玻璃效果 */
-    margin-top: 10px;
-
-    width: 80%; 
+    backdrop-filter: blur(5px);
     margin: 15px auto;
+    width: 80%;
 }
 
-.empty-tasks-hint p {
-    margin: 0;
-    font-size: 16px;
-    letter-spacing: 1px;
+/* 響應式微調：手機版改為垂直堆疊 */
+@media (max-width: 650px) {
+    .todo-header-group {
+        flex-direction: column;
+        gap: 10px;
+        position: static;
+    }
+    .board-selector {
+        position: static;
+        width: 100%;
+    }
+    .pixel-select {
+        width: 100%;
+    }
+    .form-row {
+        flex-direction: column;
+    }
 }
