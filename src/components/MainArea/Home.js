@@ -26,26 +26,31 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
     // 1. 初始化載入：處理組員提供的大物件
     useEffect(() => {
         const fetchInitialData = async () => {
+            // 檢查通行證是否存在
             if (!userState) {
-                console.warn("尚未取得userState，無法抓取看板資料"); //
+                console.warn("尚未取得 userState，無法抓取看板資料");
                 return;
             }
+
             try {
-                const data = await fetchUpdateBoards(userState); // 使用 GET 網址傳參
-                
-                // 1. 設定第二個東西：物件陣列 (所有看板)
+                // 呼叫 API (GET 請求)
+                const data = await fetchUpdateBoards(userState);
+                console.log("成功獲取大物件:", data);
+
+                // 1. 設定第二個內容：所有看板清單陣列
                 setBoards(data.boardList || []); 
 
-                // 2. 設定第一個東西：當前看板物件
+                // 2. 設定第一個內容：當前看板物件
                 if (data.mainBoard && data.mainBoard.id) {
                     setCurrentBoard(data.mainBoard);
-                    setTasks(data.allCards || []); // 匯入該看板的任務
+                    // 同時匯入該看板下的所有卡片任務
+                    setTasks(data.allCards || []); 
                 } else {
-                    // 如果是空物件 {}，顯示預設值
+                    // 若為空物件 {}，則顯示預設引導
                     setCurrentBoard({ id: '', name: '請選擇看板' });
                 }
             } catch (err) {
-                console.error("載入看板失敗:", err);
+                console.error("API 連線失敗:", err);
             }
         };
         fetchInitialData();
