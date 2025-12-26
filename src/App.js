@@ -137,6 +137,8 @@ function App() {
         }
     }, [xp, level]);
 
+    console.log("源頭 App.js 的 userState:", userState);
+
     return (
         <div 
             className="app-root" 
