@@ -125,15 +125,20 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
 
             <section className="todo-list-area">
                 <div className="todo-header-group">
+                    {/* 標題會根據 CSS 保持在正中央 */}
                     <h2><ClipboardList className='list-header-icon'/> 待辦清單</h2>
                     
-                    {/* 新增看板選擇下拉選單 */}
+                    {/* 看板選擇器會根據 CSS 絕對定位在右側 */}
                     <div className="board-selector">
                         <select 
                             value={currentBoard.id} 
                             onChange={handleBoardChange}
                             className="pixel-select"
-                        >請選擇看板
+                        >
+                            {/* 修正：預設提示必須放在 option 內 */}
+                            <option value="" disabled>請選擇看板</option>
+                            
+                            {/* 動態渲染從 API 取得的看板 */}
                             {boards.map(board => (
                                 <option key={board.id} value={board.id}>
                                     {board.name}
