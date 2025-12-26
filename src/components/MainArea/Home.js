@@ -26,22 +26,23 @@ const HomeContent = ({ xp, level, onTaskComplete, userState }) => {
     // 1. 初始化載入：處理組員提供的大物件
     useEffect(() => {
         const fetchInitialData = async () => {
-            if (!userState) return; 
+            if (!userState) {
+                console.warn("尚未取得userState，無法抓取看板資料"); //
+                return;
+            }
             try {
-                // 呼叫 API 取得包含「當前看板」與「所有看板清單」的大物件
-                const data = await fetchUpdateBoards(userState); 
+                const data = await fetchUpdateBoards(userState); // 使用 GET 網址傳參
                 
-                // 設定第二個東西：物件陣列（所有看板清單）
+                // 1. 設定第二個東西：物件陣列 (所有看板)
                 setBoards(data.boardList || []); 
 
-                // 設定第一個東西：目前所選的看板物件
-                // 如果是空物件 {}，則給予一個預設顯示文字
+                // 2. 設定第一個東西：當前看板物件
                 if (data.mainBoard && data.mainBoard.id) {
                     setCurrentBoard(data.mainBoard);
-                    setTasks(data.allCards || []); // 有選看板才抓卡片
+                    setTasks(data.allCards || []); // 匯入該看板的任務
                 } else {
+                    // 如果是空物件 {}，顯示預設值
                     setCurrentBoard({ id: '', name: '請選擇看板' });
-                    setTasks([]); // 尚未選擇看板時任務清單為空
                 }
             } catch (err) {
                 console.error("載入看板失敗:", err);

@@ -15,6 +15,10 @@ function App() {
     //for fish
     useCheckWindow();
 
+    const [userState, setUserState] = useState(() => {
+        return localStorage.getItem('user_state') || ''; // 從登入紀錄抓取 userState
+    });
+
     // 遊戲核心狀態
     const [xp, setXp] = useState(() => {
         const saved = localStorage.getItem('game_xp');
@@ -154,6 +158,7 @@ function App() {
                                 level={level} 
                                 onTaskComplete={handleTaskComplete} 
                                 themeColor={themeColor} 
+                                userState={userState}
                             />
                         } />
 
