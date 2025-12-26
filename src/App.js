@@ -16,7 +16,7 @@ function App() {
     useCheckWindow();
 
     const [userState, setUserState] = useState(() => {
-        return sessionStorage.getItem('user_state') || ''; // 從登入紀錄抓取 userState
+        return sessionStorage.getItem('userState') || ''; // 從登入紀錄抓取 userState
     });
 
     // 遊戲核心狀態
