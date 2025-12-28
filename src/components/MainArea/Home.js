@@ -53,6 +53,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
             setCurrentBoard(selected);
             setShowInitSelect(false); 
             try {
+                console.log(newBoardID);
                 const newCardsList = await fetchChangeBoard(userState, newBoardID);
                 setTasks(newCardsList || []); 
             } catch (err) {
