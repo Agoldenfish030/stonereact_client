@@ -13,7 +13,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const [boards, setBoards] = useState([]); 
     const [currentBoard, setCurrentBoard] = useState({ id: '', name: '載入中...' });
     
-    // --- 新增：控制「初次選擇」介面的顯示 ---
+    // 控制「初次選擇」介面的顯示
     const [showInitSelect, setShowInitSelect] = useState(false);
 
     const [inputValue, setInputValue] = useState(''); 
@@ -22,28 +22,36 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const [inputXP, setInputXP] = useState(20);
     const [inputPriority, setInputPriority] = useState('medium'); 
 
+    // 1. 初始獲取資料 (看板清單 + 目前主看板卡片)
     useEffect(() => {
         const fetchInitialData = async () => {
             if (!userState) return;
             try {
                 const data = await fetchUpdateBoards(userState);
+                console.log("初始獲取資料:", data); // 除錯用
+
+                // 設定所有可選看板
                 setBoards(data.boardList || []); 
 
+                // 判斷是否已有主看板
                 if (data.mainBoard && data.mainBoard.id) {
                     setCurrentBoard(data.mainBoard);
+                    
+                    // 關鍵：對接 updateBoards.js 註解中的 allCards 欄位
                     setTasks(data.allCards || []); 
                     setShowInitSelect(false);
                 } else {
                     setCurrentBoard({ id: '', name: '尚未選擇看板' });
-                    setShowInitSelect(true);
+                    setShowInitSelect(true); // 顯示彈出視窗
                 }
             } catch (err) {
-                console.error("API 連線失敗:", err);
+                console.error("初始資料獲取失敗:", err);
             }
         };
         fetchInitialData();
     }, [userState]);
 
+    // 2. 處理看板切換 (同步更新主看板並獲取新卡片)
     const handleBoardChange = async (e) => {
         const newBoardID = e.target.value;
         if (!newBoardID) return;
@@ -52,11 +60,17 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         if (selected) {
             setCurrentBoard(selected);
             setShowInitSelect(false); 
+            
             try {
+                // 關鍵：對接 changeBoard.js 回傳的物件陣列
                 const newCardsList = await fetchChangeBoard(userState, newBoardID);
-                setTasks(newCardsList || []); 
+                console.log("切換看板後的卡片清單:", newCardsList); // 除錯用
+                
+                // 直接存入回傳的陣列
+                setTasks(Array.isArray(newCardsList) ? newCardsList : []); 
             } catch (err) {
                 console.error("切換看板失敗:", err);
+                alert("切換看板失敗，請稍後再試。");
             }
         }
     };
@@ -95,12 +109,12 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
 
     return (
         <div className="main-content">
-            {/* --- 彈出式初次選擇畫面 --- */}
+            {/* 彈出式初次選擇畫面 */}
             {showInitSelect && (
                 <div className="init-overlay">
                     <div className="init-modal">
                         <h2>選擇一個主要看板來同步你的任務</h2>
-                        <p>（未來可替換）</p>
+                        <p>（未來可隨時於上方更換）</p>
                         <select 
                             value={currentBoard.id} 
                             onChange={handleBoardChange}
@@ -111,6 +125,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                                 <option key={board.id} value={board.id}>{board.name}</option>
                             ))}
                         </select>
+                        {boards.length === 0 && <p className="error-text">查無看板，請先在 Trello 建立看板。</p>}
                     </div>
                 </div>
             )}
@@ -133,7 +148,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                 <div className="todo-header-group">
                     <h2><ClipboardList className='list-header-icon'/> 待辦清單</h2>
                     <div className="board-selector">
-                        {/* 這裡隨時切換，都會呼叫 handleBoardChange 同步到後端 Main Board */}
                         <select value={currentBoard.id} onChange={handleBoardChange} className="pixel-select">
                             <option value="" disabled>更換主要看板</option>
                             {boards.map(board => (
@@ -143,7 +157,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                     </div>
                 </div>
     
-                {/* 原本的表單與列表 */}
                 <form className="add-task-form" onSubmit={addTask}>
                     <div className="form-row">
                         <input className="input-name" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="新增任務名稱..." required />
@@ -165,8 +178,14 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                 </form>
 
                 <div className="card-list">
-                    {tasks.filter(t => !t.isCompleted).map(task => (
-                        <TodoCard key={task.id} task={task} onComplete={taskComplete} onDelete={deleteTask} />
+                    {/* 過濾掉已完成的任務進行顯示 */}
+                    {Array.isArray(tasks) && tasks.filter(t => !t.isCompleted).map(task => (
+                        <TodoCard 
+                            key={task.id} 
+                            task={task} 
+                            onComplete={taskComplete} 
+                            onDelete={deleteTask} 
+                        />
                     ))}
                 </div>
             </section>
