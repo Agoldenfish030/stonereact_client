@@ -26,7 +26,7 @@ const TodoCard = ({ task, onComplete, onDelete }) => {
             </button>
 
             <div className="card-header">
-                <h4 className="card-title">{task.title}</h4>
+                <h4 className="card-title" title={task.title}>{task.title}</h4>
                 <span className="list-tag"><Tag size={14}/>{task.listName || task.tag || "一般"}</span>
             </div>
 
