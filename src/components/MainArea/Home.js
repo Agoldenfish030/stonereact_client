@@ -21,7 +21,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const [inputXP, setInputXP] = useState(20);
     const [inputPriority, setInputPriority] = useState('medium'); 
 
-    // --- 核心轉化函式：將 Trello 資料轉為本地格式 ---
     const transformTrelloTasks = (trelloCards) => {
         if (!Array.isArray(trelloCards)) return [];
         return trelloCards.map(card => ({
