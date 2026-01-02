@@ -5,7 +5,7 @@ import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 import { default as fetchUpdateBoards } from '../controlAPI/updateBoards'; 
 import { default as fetchChangeBoard } from '../controlAPI/changeBoard';
-import { default as fetchAddTask } from '../controlAPI/addTask';
+import { default as fetchAddTask } from '../controlAPI/addCard';
 import useGetSocketCall from '../controlAPI/getSocketCall';
 
 const Home = ({ xp, level, onTaskComplete, userState }) => {
