@@ -25,16 +25,16 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         if (!Array.isArray(trelloCards)) return [];
         return trelloCards.map(card => ({
             id: card.id,                       // Trello ID
-            title: card.name || "未命名任務",    // 解決空白問題：Trello 標題叫 name
+            title: card.name || "未命名任務",    // Trello name
             tag: card.tag || "Trello",
-            dueDate: card.due ? card.due.split('T')[0] : "", // 處理 Trello 時間格式
+            dueDate: card.due ? card.due.split('T')[0] : "", // Trello 時間
             xpValue: parseInt(card.xpValue, 10) || 20,
             isCompleted: card.state === 'complete' || false,
             priority: card.priority || 'medium'
         }));
     };
 
-    // 1. 初始獲取資料
+    // 初始獲取資料
     useEffect(() => {
         const fetchInitialData = async () => {
             if (!userState) return;
@@ -44,7 +44,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
 
                 if (data.mainBoard && data.mainBoard.id) {
                     setCurrentBoard(data.mainBoard);
-                    // 這裡進行轉化
+                    // 轉化
                     const formattedTasks = transformTrelloTasks(data.allCards);
                     setTasks(formattedTasks); 
                     setShowInitSelect(false);
@@ -59,25 +59,40 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         fetchInitialData();
     }, [userState]);
 
-    // 2. 處理看板切換
+    // 看板切換
     const handleBoardChange = async (e) => {
         const newBoardID = e.target.value;
         if (!newBoardID) return;
 
         const selected = boards.find(b => b.id === newBoardID);
         if (selected) {
+
             setCurrentBoard(selected);
             setShowInitSelect(false); 
-            // 切換時先清空舊任務，避免出現「一長串空白」的視覺殘留
             setTasks([]); 
             
             try {
-                const newCardsList = await fetchChangeBoard(userState, newBoardID);
-                // 這裡進行轉化
-                const formattedTasks = transformTrelloTasks(newCardsList);
+                console.log(`正在切換至看板: ${selected.name} (ID: ${newBoardID})`);
+                
+                const response = await fetchChangeBoard(userState, newBoardID);
+                console.log("切換看板 API 原始回傳:", response);
+
+                let rawCards = [];
+                if (Array.isArray(response)) {
+                    rawCards = response; // 如果直接是陣列
+                } else if (response && response.allCards) {
+                    rawCards = response.allCards; // 如果被包在 allCards 欄位裡
+                } else if (response && response.cards) {
+                    rawCards = response.cards; // 或是叫 cards
+                }
+
+                const formattedTasks = transformTrelloTasks(rawCards);
+                console.log("轉化後的任務清單:", formattedTasks);
+                
                 setTasks(formattedTasks); 
             } catch (err) {
                 console.error("切換看板失敗:", err);
+                alert("無法獲取該看板的卡片，請檢查網路連線。");
             }
         }
     };
@@ -182,7 +197,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                 </form>
 
                 <div className="card-list">
-                    {/* 這裡加入判斷，若沒有任務則顯示提示，不渲染空白卡片 */}
                     {tasks.length > 0 ? (
                         tasks.filter(t => !t.isCompleted).map(task => (
                             <TodoCard 
@@ -193,7 +207,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                             />
                         ))
                     ) : (
-                        <div className="empty-state">目前看板沒有任何待辦任務</div>
+                        <div className="empty-state">  目前看板沒有任何待辦任務</div>
                     )}
                 </div>
             </section>
