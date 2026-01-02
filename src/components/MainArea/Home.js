@@ -12,8 +12,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const [tasks, setTasks] = useState([]); 
     const [boards, setBoards] = useState([]); 
     const [currentBoard, setCurrentBoard] = useState({ id: '', name: '載入中...' });
-    
-    // 控制「初次選擇」介面的顯示
     const [showInitSelect, setShowInitSelect] = useState(false);
 
     const [inputValue, setInputValue] = useState(''); 
@@ -22,36 +20,46 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const [inputXP, setInputXP] = useState(20);
     const [inputPriority, setInputPriority] = useState('medium'); 
 
-    // 1. 初始獲取資料 (看板清單 + 目前主看板卡片)
+    // --- 核心轉化函式：將 Trello 資料轉為本地格式 ---
+    const transformTrelloTasks = (trelloCards) => {
+        if (!Array.isArray(trelloCards)) return [];
+        return trelloCards.map(card => ({
+            id: card.id,                       // Trello ID
+            title: card.name || "未命名任務",    // 解決空白問題：Trello 標題叫 name
+            tag: card.tag || "Trello",
+            dueDate: card.due ? card.due.split('T')[0] : "", // 處理 Trello 時間格式
+            xpValue: parseInt(card.xpValue, 10) || 20,
+            isCompleted: card.state === 'complete' || false,
+            priority: card.priority || 'medium'
+        }));
+    };
+
+    // 1. 初始獲取資料
     useEffect(() => {
         const fetchInitialData = async () => {
             if (!userState) return;
             try {
                 const data = await fetchUpdateBoards(userState);
-                console.log("初始獲取資料:", data); // 除錯用
-
-                // 設定所有可選看板
                 setBoards(data.boardList || []); 
 
-                // 判斷是否已有主看板
                 if (data.mainBoard && data.mainBoard.id) {
                     setCurrentBoard(data.mainBoard);
-                    
-                    // 關鍵：對接 updateBoards.js 註解中的 allCards 欄位
-                    setTasks(data.allCards || []); 
+                    // 這裡進行轉化
+                    const formattedTasks = transformTrelloTasks(data.allCards);
+                    setTasks(formattedTasks); 
                     setShowInitSelect(false);
                 } else {
                     setCurrentBoard({ id: '', name: '尚未選擇看板' });
-                    setShowInitSelect(true); // 顯示彈出視窗
+                    setShowInitSelect(true);
                 }
             } catch (err) {
-                console.error("初始資料獲取失敗:", err);
+                console.error("API 連線失敗:", err);
             }
         };
         fetchInitialData();
     }, [userState]);
 
-    // 2. 處理看板切換 (同步更新主看板並獲取新卡片)
+    // 2. 處理看板切換
     const handleBoardChange = async (e) => {
         const newBoardID = e.target.value;
         if (!newBoardID) return;
@@ -60,17 +68,16 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         if (selected) {
             setCurrentBoard(selected);
             setShowInitSelect(false); 
+            // 切換時先清空舊任務，避免出現「一長串空白」的視覺殘留
+            setTasks([]); 
             
             try {
-                // 關鍵：對接 changeBoard.js 回傳的物件陣列
                 const newCardsList = await fetchChangeBoard(userState, newBoardID);
-                console.log("切換看板後的卡片清單:", newCardsList); // 除錯用
-                
-                // 直接存入回傳的陣列
-                setTasks(Array.isArray(newCardsList) ? newCardsList : []); 
+                // 這裡進行轉化
+                const formattedTasks = transformTrelloTasks(newCardsList);
+                setTasks(formattedTasks); 
             } catch (err) {
                 console.error("切換看板失敗:", err);
-                alert("切換看板失敗，請稍後再試。");
             }
         }
     };
@@ -84,7 +91,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         setTasks(updatedTasks);
         localStorage.setItem('local_tasks', JSON.stringify(updatedTasks));
         if (onTaskComplete) {
-            onTaskComplete(parseInt(targetTask.xpValue, 10) || 20, targetTask.title || "未命名任務");
+            onTaskComplete(targetTask.xpValue, targetTask.title);
         }
     };
 
@@ -95,7 +102,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const addTask = (e) => {
         e.preventDefault();
         const newTask = {
-            id: Date.now(),
+            id: Date.now().toString(), // 統一轉為字串
             title: inputValue,
             tag: inputTag || "一般",
             dueDate: inputDate,
@@ -109,12 +116,10 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
 
     return (
         <div className="main-content">
-            {/* 彈出式初次選擇畫面 */}
             {showInitSelect && (
                 <div className="init-overlay">
                     <div className="init-modal">
                         <h2>選擇一個主要看板來同步你的任務</h2>
-                        <p>（未來可隨時於上方更換）</p>
                         <select 
                             value={currentBoard.id} 
                             onChange={handleBoardChange}
@@ -125,7 +130,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                                 <option key={board.id} value={board.id}>{board.name}</option>
                             ))}
                         </select>
-                        {boards.length === 0 && <p className="error-text">查無看板，請先在 Trello 建立看板。</p>}
                     </div>
                 </div>
             )}
@@ -178,15 +182,19 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                 </form>
 
                 <div className="card-list">
-                    {/* 過濾掉已完成的任務進行顯示 */}
-                    {Array.isArray(tasks) && tasks.filter(t => !t.isCompleted).map(task => (
-                        <TodoCard 
-                            key={task.id} 
-                            task={task} 
-                            onComplete={taskComplete} 
-                            onDelete={deleteTask} 
-                        />
-                    ))}
+                    {/* 這裡加入判斷，若沒有任務則顯示提示，不渲染空白卡片 */}
+                    {tasks.length > 0 ? (
+                        tasks.filter(t => !t.isCompleted).map(task => (
+                            <TodoCard 
+                                key={task.id} 
+                                task={task} 
+                                onComplete={taskComplete} 
+                                onDelete={deleteTask} 
+                            />
+                        ))
+                    ) : (
+                        <div className="empty-state">目前看板沒有任何待辦任務</div>
+                    )}
                 </div>
             </section>
         </div>
