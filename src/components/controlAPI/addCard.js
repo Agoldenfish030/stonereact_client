@@ -1,5 +1,5 @@
 const useAddTask = async (userState, boardID, taskData) => {
-    const response = await fetch('https://toomuchstonestodo.onrender.com/userToken/addTask', {
+    const response = await fetch('https://toomuchstonestodo.onrender.com/userToken/addCard', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ 
