@@ -99,8 +99,8 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
             {showInitSelect && (
                 <div className="init-overlay">
                     <div className="init-modal">
-                        <h2>勇者，請選擇冒險區域</h2>
-                        <p>你需要指定一個主要看板來同步你的任務</p>
+                        <h2>選擇一個主要看板來同步你的任務</h2>
+                        <p>（未來可替換）</p>
                         <select 
                             value={currentBoard.id} 
                             onChange={handleBoardChange}
