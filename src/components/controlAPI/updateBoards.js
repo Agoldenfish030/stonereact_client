@@ -7,7 +7,7 @@ const useUpdateBoards = async(userState)=>{
     return boardDatas;
 }
 //return content:
-//{
+//boardDatas: {
 //    mainBoard: {
 //        id, //String
 //        name //String
