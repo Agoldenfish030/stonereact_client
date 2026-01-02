@@ -8,6 +8,11 @@ const useChangeBoard = async(userState, mainBoardID)=>{
     return newCardsList;
 }
 //return content:
-//newCardsList: object array
+//newCardsList: [{
+//          id,  //String
+//          name,  //String
+//          due,  //String
+//          dueComplete  //Boolean
+//     }]
 
 export default useChangeBoard;

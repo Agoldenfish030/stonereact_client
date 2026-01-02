@@ -9,11 +9,19 @@ const useUpdateBoards = async(userState)=>{
 //return content:
 //{
 //    mainBoard: {
-//        id: mainBoardID,
-//        name: mainBoardName
+//        id, //String
+//        name //String
 //    },
-//    boardList: boardList,
-//    allCards: allCards
+//    boardList: [{
+//          id,  //String
+//          name  //String
+//    }],
+//    allCards: [{
+//          id,  //String
+//          name,  //String
+//          due,  //String
+//          dueComplete  //Boolean
+//     }]
 //};
 //
 
