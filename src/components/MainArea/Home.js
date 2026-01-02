@@ -6,6 +6,7 @@ import { Gamepad2, ClipboardList } from 'lucide-react';
 import { default as fetchUpdateBoards } from '../controlAPI/updateBoards'; 
 import { default as fetchChangeBoard } from '../controlAPI/changeBoard';
 import { default as fetchAddTask } from '../controlAPI/addTask';
+import useGetSocketCall from '../controlAPI/getSocketCall';
 
 const Home = ({ xp, level, onTaskComplete, userState }) => {
     const todayString = new Date().toISOString().split('T')[0];
@@ -21,20 +22,46 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const [inputXP, setInputXP] = useState(20);
     const [inputPriority, setInputPriority] = useState('medium'); 
 
+    const socketData = useGetSocketCall();
+
     const transformTrelloTasks = (trelloCards) => {
-        if (!Array.isArray(trelloCards)) return [];
-        return trelloCards.map(card => ({
-            id: card.id,                       // Trello ID
-            title: card.name || "未命名任務",    // Trello name
+
+        if (!trelloCards) return [];
+        const cardsArray = Array.isArray(trelloCards) ? trelloCards : [trelloCards];
+        
+        return cardsArray.map(card => ({
+            id: card.id || card.cardID,
+            title: card.name || card.cardName || "未命名任務",
             tag: card.tag || "Trello",
-            dueDate: card.due ? card.due.split('T')[0] : "", // Trello 時間
+            dueDate: (card.due || card.cardDue) ? (card.due || card.cardDue).split('T')[0] : "",
             xpValue: parseInt(card.xpValue, 10) || 20,
-            isCompleted: card.state === 'complete' || false,
+            isCompleted: card.state === 'complete' || card.cardComplete || card.dueComplete || false,
             priority: card.priority || 'medium'
         }));
     };
 
-    // 初始獲取資料
+    // 即時更新
+    useEffect(() => {
+        if (!socketData) return;
+
+        const formatted = transformTrelloTasks(socketData)[0];
+        
+        setTasks(prevTasks => {
+            const exists = prevTasks.find(t => t.id === formatted.id);
+
+            if (socketData.type === 'create') {
+                return exists ? prevTasks : [...prevTasks, formatted];
+            } 
+            if (socketData.type === 'update') {
+                return prevTasks.map(t => t.id === formatted.id ? { ...t, ...formatted } : t);
+            }
+            if (socketData.type === 'delete') {
+                return prevTasks.filter(t => t.id !== formatted.id);
+            }
+            return prevTasks;
+        });
+    }, [socketData]);
+
     useEffect(() => {
         const fetchInitialData = async () => {
             if (!userState) return;
@@ -44,7 +71,6 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
 
                 if (data.mainBoard && data.mainBoard.id) {
                     setCurrentBoard(data.mainBoard);
-                    // 轉化
                     const formattedTasks = transformTrelloTasks(data.allCards);
                     setTasks(formattedTasks); 
                     setShowInitSelect(false);
@@ -59,40 +85,31 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         fetchInitialData();
     }, [userState]);
 
-    // 看板切換
     const handleBoardChange = async (e) => {
         const newBoardID = e.target.value;
         if (!newBoardID) return;
 
         const selected = boards.find(b => b.id === newBoardID);
         if (selected) {
-
             setCurrentBoard(selected);
             setShowInitSelect(false); 
-            setTasks([]); 
+            setTasks([]);
             
             try {
-                console.log(`正在切換至看板: ${selected.name} (ID: ${newBoardID})`);
-                
                 const response = await fetchChangeBoard(userState, newBoardID);
-                console.log("切換看板 API 原始回傳:", response);
-
                 let rawCards = [];
                 if (Array.isArray(response)) {
-                    rawCards = response; // 如果直接是陣列
+                    rawCards = response;
                 } else if (response && response.allCards) {
-                    rawCards = response.allCards; // 如果被包在 allCards 欄位裡
+                    rawCards = response.allCards;
                 } else if (response && response.cards) {
-                    rawCards = response.cards; // 或是叫 cards
+                    rawCards = response.cards;
                 }
 
-                const formattedTasks = transformTrelloTasks(rawCards);
-                console.log("轉化後的任務清單:", formattedTasks);
-                
-                setTasks(formattedTasks); 
+                setTasks(transformTrelloTasks(rawCards)); 
             } catch (err) {
                 console.error("切換看板失敗:", err);
-                alert("無法獲取該看板的卡片，請檢查網路連線。");
+                alert("無法獲取該看板的卡片。");
             }
         }
     };
@@ -128,23 +145,24 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         try {
             const savedTask = await fetchAddTask(userState, currentBoard.id, taskData);
 
-            if (savedTask && savedTask.id) {
-                const formattedNewTask = transformTrelloTasks([savedTask])[0];
-                setTasks(prev => [...prev, formattedNewTask]);
-
-                setInputValue(''); 
-                setInputTag(''); 
-                setInputDate(''); 
-                setInputXP(20); 
-                setInputPriority('medium');
+            if (savedTask && (savedTask.id || savedTask.cardID)) {
+                const formattedNewTask = transformTrelloTasks(savedTask)[0];
                 
+                // 避免重複
+                setTasks(prev => {
+                    if (prev.find(t => t.id === formattedNewTask.id)) return prev;
+                    return [...prev, formattedNewTask];
+                });
+
+                setInputValue(''); setInputTag(''); setInputDate(''); 
+                setInputXP(20); setInputPriority('medium');
                 alert('任務已成功同步至 Trello！');
             } else {
                 throw new Error("同步失敗");
             }
         } catch (err) {
             console.error("同步至 Trello 出錯:", err);
-            alert("無法同步至 Trello，請檢查網路或看板設定。");
+            alert("無法同步至 Trello，請檢查 API 路徑是否正確。");
         }
     };
 
