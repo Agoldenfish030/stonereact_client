@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import io from "socket.io-client";
 
 const socket = io('https://toomuchstonestodo.onrender.com');
-const useExchangeCardsAction = ()=>{
+const useGetSocketCall = ()=>{
     const [resCard, setResCard] = useState(null);
 
     useEffect(() => {
@@ -16,4 +16,12 @@ const useExchangeCardsAction = ()=>{
     return resCard;
 }
 
-export default useExchangeCardsAction;
+// cardData = {
+//      type: '',
+//      cardID: action.data.card.id, //String
+//      cardName: action.data.card.name, //String
+//      cardDue: action.data.card.due,
+//      cardComplete: action.data.card.dueComplete //Boolean
+// };
+
+export default useGetSocketCall;
