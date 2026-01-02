@@ -5,6 +5,7 @@ import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 import { default as fetchUpdateBoards } from '../controlAPI/updateBoards'; 
 import { default as fetchChangeBoard } from '../controlAPI/changeBoard';
+import { default as fetchAddTask } from '../controlAPI/addTask';
 
 const Home = ({ xp, level, onTaskComplete, userState }) => {
     const todayString = new Date().toISOString().split('T')[0];
@@ -114,19 +115,38 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
     };
 
-    const addTask = (e) => {
+    const addTask = async (e) => {
         e.preventDefault();
-        const newTask = {
-            id: Date.now().toString(), // 統一轉為字串
+        
+        const taskData = {
             title: inputValue,
             tag: inputTag || "一般",
             dueDate: inputDate,
             xpValue: parseInt(inputXP, 10) || 20,
-            isCompleted: false,
             priority: inputPriority 
         };
-        setTasks([...tasks, newTask]);
-        setInputValue(''); setInputTag(''); setInputDate(''); setInputXP(20); setInputPriority('medium');
+
+        try {
+            const savedTask = await fetchAddTask(userState, currentBoard.id, taskData);
+
+            if (savedTask && savedTask.id) {
+                const formattedNewTask = transformTrelloTasks([savedTask])[0];
+                setTasks(prev => [...prev, formattedNewTask]);
+
+                setInputValue(''); 
+                setInputTag(''); 
+                setInputDate(''); 
+                setInputXP(20); 
+                setInputPriority('medium');
+                
+                alert('任務已成功同步至 Trello！');
+            } else {
+                throw new Error("同步失敗");
+            }
+        } catch (err) {
+            console.error("同步至 Trello 出錯:", err);
+            alert("無法同步至 Trello，請檢查網路或看板設定。");
+        }
     };
 
     return (
