@@ -1,4 +1,4 @@
-const useRequestTrello = async(state, type, id, name, due, dueComplete)=>{
+const requestTrello = async(state, type, id, name, due, dueComplete)=>{
     await fetch('https://toomuchstonestodo.onrender.com/userToken/requestTrello', {
         method: 'PUT',
         headers: {
@@ -8,4 +8,4 @@ const useRequestTrello = async(state, type, id, name, due, dueComplete)=>{
     });
 }
 
-export default useRequestTrello;
+export default requestTrello;
