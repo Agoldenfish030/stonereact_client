@@ -4,7 +4,6 @@ import Stone from '../Stone/Stone';
 import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
 
-// 導入你提供的 API 與 Socket 工具
 import fetchUpdateBoards from '../controlAPI/updateBoards'; 
 import fetchChangeBoard from '../controlAPI/changeBoard';
 import useRequestTrello from '../controlAPI/requestTrello'; // 新增到 Trello 的工具
