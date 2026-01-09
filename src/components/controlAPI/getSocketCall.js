@@ -17,10 +17,11 @@ const useGetSocketCall = ()=>{
 }
 
 // cardData = {
+        //ADD, DELETE, UPDATE
 //      type: '',
 //      cardID: action.data.card.id, //String
 //      cardName: action.data.card.name, //String
-//      cardDue: action.data.card.due,
+//      cardDue: action.data.card.due,  //String
 //      cardComplete: action.data.card.dueComplete //Boolean
 // };
 
