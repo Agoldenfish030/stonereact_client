@@ -3,10 +3,12 @@ import TodoCard from '../TodoCard/TodoCard';
 import Stone from '../Stone/Stone';
 import './Home.css';
 import { Gamepad2, ClipboardList } from 'lucide-react';
-import { default as fetchUpdateBoards } from '../controlAPI/updateBoards'; 
-import { default as fetchChangeBoard } from '../controlAPI/changeBoard';
-import { default as fetchAddTask } from '../controlAPI/addCard';
-import useGetSocketCall from '../controlAPI/getSocketCall';
+
+// 導入你提供的 API 與 Socket 工具
+import fetchUpdateBoards from '../controlAPI/updateBoards'; 
+import fetchChangeBoard from '../controlAPI/changeBoard';
+import useRequestTrello from '../controlAPI/requestTrello'; // 新增到 Trello 的工具
+import useGetSocketCall from '../controlAPI/getSocketCall'; // 即時監聽工具
 
 const Home = ({ xp, level, onTaskComplete, userState }) => {
     const todayString = new Date().toISOString().split('T')[0];
@@ -16,153 +18,141 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     const [currentBoard, setCurrentBoard] = useState({ id: '', name: '載入中...' });
     const [showInitSelect, setShowInitSelect] = useState(false);
 
+    // 表單輸入狀態
     const [inputValue, setInputValue] = useState(''); 
     const [inputTag, setInputTag] = useState('');
     const [inputDate, setInputDate] = useState('');
     const [inputXP, setInputXP] = useState(20);
     const [inputPriority, setInputPriority] = useState('medium'); 
 
+    // 啟動 Socket 監聽
     const socketData = useGetSocketCall();
 
-    const transformTrelloTasks = (trelloCards) => {
+    // --- 統一格式轉化函式 (對齊你的 cardData 格式) ---
+    const formatTask = (data) => ({
+        id: data.cardID || data.id,
+        title: data.cardName || data.name || "未命名任務",
+        dueDate: (data.cardDue || data.due) ? (data.cardDue || data.due).split('T')[0] : "",
+        isCompleted: data.cardComplete || data.dueComplete || false,
+        tag: data.tag || "Trello",
+        xpValue: parseInt(data.xpValue, 10) || 20,
+        priority: data.priority || 'medium'
+    });
 
-        if (!trelloCards) return [];
-        const cardsArray = Array.isArray(trelloCards) ? trelloCards : [trelloCards];
-        
-        return cardsArray.map(card => ({
-            id: card.id || card.cardID,
-            title: card.name || card.cardName || "未命名任務",
-            tag: card.tag || "Trello",
-            dueDate: (card.due || card.cardDue) ? (card.due || card.cardDue).split('T')[0] : "",
-            xpValue: parseInt(card.xpValue, 10) || 20,
-            isCompleted: card.state === 'complete' || card.cardComplete || card.dueComplete || false,
-            priority: card.priority || 'medium'
-        }));
-    };
-
-    // 即時更新
+    // --- 監聽 Trello 的即時更新 (ADD, DELETE, UPDATE) ---
     useEffect(() => {
         if (!socketData) return;
 
-        const formatted = transformTrelloTasks(socketData)[0];
-        
-        setTasks(prevTasks => {
-            const exists = prevTasks.find(t => t.id === formatted.id);
+        console.log("收到 Socket 更新:", socketData);
+        const { type, cardID } = socketData;
+        const formatted = formatTask(socketData);
 
-            if (socketData.type === 'create') {
-                return exists ? prevTasks : [...prevTasks, formatted];
-            } 
-            if (socketData.type === 'update') {
-                return prevTasks.map(t => t.id === formatted.id ? { ...t, ...formatted } : t);
+        setTasks(prevTasks => {
+            switch (type) {
+                case 'ADD':
+                    // 防止重複：若已存在則不動作
+                    if (prevTasks.find(t => t.id === cardID)) return prevTasks;
+                    return [...prevTasks, formatted];
+
+                case 'UPDATE':
+                    return prevTasks.map(t => t.id === cardID ? { ...t, ...formatted } : t);
+
+                case 'DELETE':
+                    return prevTasks.filter(t => t.id !== cardID);
+
+                default:
+                    return prevTasks;
             }
-            if (socketData.type === 'delete') {
-                return prevTasks.filter(t => t.id !== formatted.id);
-            }
-            return prevTasks;
         });
     }, [socketData]);
 
+    // 初始獲取資料 (GET)
     useEffect(() => {
         const fetchInitialData = async () => {
             if (!userState) return;
             try {
                 const data = await fetchUpdateBoards(userState);
                 setBoards(data.boardList || []); 
-
-                if (data.mainBoard && data.mainBoard.id) {
+                if (data.mainBoard?.id) {
                     setCurrentBoard(data.mainBoard);
-                    const formattedTasks = transformTrelloTasks(data.allCards);
-                    setTasks(formattedTasks); 
+                    setTasks((data.allCards || []).map(formatTask));
                     setShowInitSelect(false);
                 } else {
-                    setCurrentBoard({ id: '', name: '尚未選擇看板' });
                     setShowInitSelect(true);
                 }
             } catch (err) {
-                console.error("API 連線失敗:", err);
+                console.error("初始載入失敗:", err);
             }
         };
         fetchInitialData();
     }, [userState]);
 
+    // 切換看板 (PUT)
     const handleBoardChange = async (e) => {
         const newBoardID = e.target.value;
         if (!newBoardID) return;
-
         const selected = boards.find(b => b.id === newBoardID);
         if (selected) {
             setCurrentBoard(selected);
-            setShowInitSelect(false); 
-            setTasks([]);
-            
+            setShowInitSelect(false);
+            setTasks([]); 
             try {
                 const response = await fetchChangeBoard(userState, newBoardID);
-                let rawCards = [];
-                if (Array.isArray(response)) {
-                    rawCards = response;
-                } else if (response && response.allCards) {
-                    rawCards = response.allCards;
-                } else if (response && response.cards) {
-                    rawCards = response.cards;
-                }
-
-                setTasks(transformTrelloTasks(rawCards)); 
+                setTasks((Array.isArray(response) ? response : (response.allCards || [])).map(formatTask));
             } catch (err) {
                 console.error("切換看板失敗:", err);
-                alert("無法獲取該看板的卡片。");
             }
         }
     };
 
-    const taskComplete = (taskId) => {
-        const targetTask = tasks.find(t => t.id === taskId);
-        if (!targetTask) return;
-        const updatedTasks = tasks.map(task =>
-            task.id === taskId ? { ...task, isCompleted: true, completedDate: todayString } : task
-        );
-        setTasks(updatedTasks);
-        localStorage.setItem('local_tasks', JSON.stringify(updatedTasks));
-        if (onTaskComplete) {
-            onTaskComplete(targetTask.xpValue, targetTask.title);
-        }
-    };
-
-    const deleteTask = (taskId) => {
-        setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
-    };
-
+    // 新增任務 (同步至 Trello)
     const addTask = async (e) => {
         e.preventDefault();
         
-        const taskData = {
-            title: inputValue,
-            tag: inputTag || "一般",
-            dueDate: inputDate,
-            xpValue: parseInt(inputXP, 10) || 20,
-            priority: inputPriority 
-        };
+        // 依照你要求的格式發送：state, type, id, name, due, dueComplete
+        // 新增時 ID 通常由 Trello 生成，這裡先傳空或當前看板 ID（視後端邏輯而定）
+        const type = "ADD";
+        const id = currentBoard.id; // 或是讓後端決定
+        const name = inputValue;
+        const due = inputDate;
+        const dueComplete = false;
 
         try {
-            const savedTask = await fetchAddTask(userState, currentBoard.id, taskData);
+            // 呼叫 requestTrello.js
+            await useRequestTrello(userState, type, id, name, due, dueComplete);
+            
+            // 提醒：不需要在這裡手動 setTasks，因為 Socket 會傳回 ADD 事件自動更新畫面
+            setInputValue(''); setInputTag(''); setInputDate('');
+            alert('請求已發送至 Trello');
+        } catch (err) {
+            console.error("新增失敗:", err);
+            alert("同步失敗");
+        }
+    };
 
-            if (savedTask && (savedTask.id || savedTask.cardID)) {
-                const formattedNewTask = transformTrelloTasks(savedTask)[0];
-                
-                // 避免重複
-                setTasks(prev => {
-                    if (prev.find(t => t.id === formattedNewTask.id)) return prev;
-                    return [...prev, formattedNewTask];
-                });
+    // 完成任務 (也會發送 UPDATE 到 Trello)
+    const taskComplete = async (taskId) => {
+        const targetTask = tasks.find(t => t.id === taskId);
+        if (!targetTask) return;
 
-                setInputValue(''); setInputTag(''); setInputDate(''); 
-                setInputXP(20); setInputPriority('medium');
-                alert('任務已成功同步至 Trello！');
-            } else {
-                throw new Error("同步失敗");
+        try {
+            // 同步狀態到 Trello
+            await useRequestTrello(userState, "UPDATE", taskId, targetTask.title, targetTask.dueDate, true);
+            
+            // 經驗值處理
+            if (onTaskComplete) {
+                onTaskComplete(targetTask.xpValue, targetTask.title);
             }
         } catch (err) {
-            console.error("同步至 Trello 出錯:", err);
-            alert("無法同步至 Trello，請檢查 API 路徑是否正確。");
+            console.error("更新失敗:", err);
+        }
+    };
+
+    const deleteTask = async (taskId) => {
+        try {
+            await useRequestTrello(userState, "DELETE", taskId, "", "", false);
+        } catch (err) {
+            console.error("刪除失敗:", err);
         }
     };
 
@@ -172,11 +162,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                 <div className="init-overlay">
                     <div className="init-modal">
                         <h2>選擇一個主要看板來同步你的任務</h2>
-                        <select 
-                            value={currentBoard.id} 
-                            onChange={handleBoardChange}
-                            className="pixel-select-large"
-                        >
+                        <select value={currentBoard.id} onChange={handleBoardChange} className="pixel-select-large">
                             <option value="" disabled>--- 點擊選擇看板 ---</option>
                             {boards.map(board => (
                                 <option key={board.id} value={board.id}>{board.name}</option>
@@ -189,13 +175,8 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
             <section className="game-area">
                 <h2><Gamepad2 className='game-header-icon'/> 遊戲進度</h2>
                 <div className="stat-panel">
-                    <div className="stat-info">
-                        <span>Lv. {level}</span>
-                        <span>{xp} / 100 XP</span>
-                    </div>
-                    <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: `${xp}%` }}></div>
-                    </div>
+                    <div className="stat-info"><span>Lv. {level}</span><span>{xp} / 100 XP</span></div>
+                    <div className="progress-bar"><div className="progress-fill" style={{ width: `${xp}%` }}></div></div>
                 </div>
                 <div className="stone-container"><Stone /></div>
             </section>
@@ -206,9 +187,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                     <div className="board-selector">
                         <select value={currentBoard.id} onChange={handleBoardChange} className="pixel-select">
                             <option value="" disabled>更換主要看板</option>
-                            {boards.map(board => (
-                                <option key={board.id} value={board.id}>{board.name}</option>
-                            ))}
+                            {boards.map(board => (<option key={board.id} value={board.id}>{board.name}</option>))}
                         </select>
                     </div>
                 </div>
@@ -216,36 +195,22 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
                 <form className="add-task-form" onSubmit={addTask}>
                     <div className="form-row">
                         <input className="input-name" value={inputValue} onChange={(e) => setInputValue(e.target.value)} placeholder="新增任務名稱..." required />
-                        <input className="input-tag" value={inputTag} onChange={(e) => setInputTag(e.target.value)} placeholder="標籤 (如：運動)" />
+                        <input className="input-tag" value={inputTag} onChange={(e) => setInputTag(e.target.value)} placeholder="標籤" />
                     </div>
                     <div className="form-row">
                         <input type="date" required min={todayString} className="input-date" value={inputDate} onChange={(e) => setInputDate(e.target.value)} />
                         <select className={`input-priority ${inputPriority}`} value={inputPriority} onChange={(e) => setInputPriority(e.target.value)}>
-                            <option value="low">優先度低</option>
-                            <option value="medium">優先度中</option>
-                            <option value="high">優先度高</option>
+                            <option value="low">優先度低</option><option value="medium">優先度中</option><option value="high">優先度高</option>
                         </select>
-                        <div className="xp-input-group">
-                            <span>XP:</span>
-                            <input type="number" value={inputXP} onChange={(e) => setInputXP(e.target.value)} max="150" />
-                        </div>
+                        <div className="xp-input-group"><span>XP:</span><input type="number" value={inputXP} onChange={(e) => setInputXP(e.target.value)} /></div>
                         <button type="submit" className="pixel-btn">發佈</button>
                     </div>
                 </form>
 
                 <div className="card-list">
-                    {tasks.length > 0 ? (
-                        tasks.filter(t => !t.isCompleted).map(task => (
-                            <TodoCard 
-                                key={task.id} 
-                                task={task} 
-                                onComplete={taskComplete} 
-                                onDelete={deleteTask} 
-                            />
-                        ))
-                    ) : (
-                        <div className="empty-state">  目前看板沒有任何待辦任務</div>
-                    )}
+                    {tasks.filter(t => !t.isCompleted).map(task => (
+                        <TodoCard key={task.id} task={task} onComplete={taskComplete} onDelete={deleteTask} />
+                    ))}
                 </div>
             </section>
         </div>
