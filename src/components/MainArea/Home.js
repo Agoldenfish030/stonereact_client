@@ -130,17 +130,17 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
     };
 
     // 完成任務 (也會發送 UPDATE 到 Trello)
+    // Home.js 裡的 taskComplete
     const taskComplete = async (taskId) => {
         const targetTask = tasks.find(t => t.id === taskId);
         if (!targetTask) return;
 
         try {
-            // 同步狀態到 Trello
             await useRequestTrello(userState, "UPDATE", taskId, targetTask.title, targetTask.dueDate, true);
             
-            // 經驗值處理
             if (onTaskComplete) {
-                onTaskComplete(targetTask.xpValue, targetTask.title);
+                // 這裡多傳一個 taskId 給 App.js
+                onTaskComplete(targetTask.xpValue, targetTask.title, taskId); 
             }
         } catch (err) {
             console.error("更新失敗:", err);

@@ -74,51 +74,68 @@ function App() {
     };
 
     const checkAchievementUnlocks = (totalCount) => {
-        // 取得目前已解鎖的 ID 清單
         const unlocked = JSON.parse(localStorage.getItem('unlocked_achievements') || '[]');
         
-        // 2. 為了判定「效率達人」，從 localStorage 抓取今天的任務完成狀況
-        const localTasks = JSON.parse(localStorage.getItem('local_tasks') || '[]');
+        // 1. 從 localStorage 抓取今天完成過的卡片 ID 清單
         const today = new Date().toISOString().split('T')[0];
-        const completedToday = localTasks.filter(t => t.isCompleted && t.completedDate === today).length;
+        const dailyRecord = JSON.parse(localStorage.getItem('daily_completed_record') || '{}');
+        
+        // 如果日期不是今天，就重置（歸零）
+        if (dailyRecord.date !== today) {
+            dailyRecord.date = today;
+            dailyRecord.ids = [];
+        }
+        const completedTodayCount = dailyRecord.ids.length;
 
-        // 3. 統一成就定義清單：將條件 (condition) 寫在這裡
+        // 2. 成就定義
         const milestones = [
             { id: 1, title: '初出茅廬', condition: totalCount >= 1 },
-            { id: 3, title: '效率達人', condition: completedToday >= 10 },
+            { id: 3, title: '效率達人', condition: completedTodayCount >= 10 },
             { id: 4, title: '小有成就', condition: totalCount >= 30 }
         ];
 
         let hasNewUnlock = false;
-
-        // 使用單一迴圈檢查所有成就
         milestones.forEach(m => {
-            // 如果滿足條件且尚未解鎖
             if (m.condition && !unlocked.includes(m.id)) {
                 unlocked.push(m.id);
                 hasNewUnlock = true;
-                
-                // 延遲彈窗，增加獲得成就的驚喜感
-                setTimeout(() => {
-                    alert(`獲得成就：${m.title}`);
-                }, 800);
+                setTimeout(() => alert(`🏆 獲得成就：${m.title}`), 800);
             }
         });
 
-        // 如果有新解鎖，一次性存入 localStorage
         if (hasNewUnlock) {
             localStorage.setItem('unlocked_achievements', JSON.stringify(unlocked));
         }
+        
+        // 儲存更新後的每日紀錄（確保日期正確）
+        localStorage.setItem('daily_completed_record', JSON.stringify(dailyRecord));
     };
 
     // 處理獲得經驗與升級
-    const handleTaskComplete = (xpGain, taskTitle) => {
+    // 修改參數，多接收一個 taskId
+    const handleTaskComplete = (xpGain, taskTitle, taskId) => {
         alert(`任務:「${taskTitle}」已完成！獲得經驗值！`);
         setXp(prev => Number(prev) + Number(xpGain));
 
+        // 更新總次數
         const currentCount = Number(localStorage.getItem('total_completed_tasks') || 0);
         const newCount = currentCount + 1;
         localStorage.setItem('total_completed_tasks', newCount);
+
+        // 更新「今日完成 ID」紀錄
+        const today = new Date().toISOString().split('T')[0];
+        let dailyRecord = JSON.parse(localStorage.getItem('daily_completed_record') || '{"date":"","ids":[]}');
+        
+        if (dailyRecord.date !== today) {
+            dailyRecord = { date: today, ids: [] };
+        }
+        
+        // 如果這個 ID 還沒被記錄過，就加進去
+        if (taskId && !dailyRecord.ids.includes(taskId)) {
+            dailyRecord.ids.push(taskId);
+            localStorage.setItem('daily_completed_record', JSON.stringify(dailyRecord));
+        }
+
         checkAchievementUnlocks(newCount);
     };
 
