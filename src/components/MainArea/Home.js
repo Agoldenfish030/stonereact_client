@@ -6,7 +6,7 @@ import { Gamepad2, ClipboardList } from 'lucide-react';
 
 import fetchUpdateBoards from '../controlAPI/updateBoards'; 
 import fetchChangeBoard from '../controlAPI/changeBoard';
-import useRequestTrello from '../controlAPI/requestTrello'; // 新增到 Trello 的工具
+import requestTrello from '../controlAPI/requestTrello'; // 新增到 Trello 的工具
 import useGetSocketCall from '../controlAPI/getSocketCall'; // 即時監聽工具
 
 const Home = ({ xp, level, onTaskComplete, userState }) => {
@@ -118,7 +118,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
 
         try {
             // 呼叫 requestTrello.js
-            await useRequestTrello(userState, type, id, name, due, dueComplete);
+            await requestTrello(userState, type, id, name, due, dueComplete);
             
             // 提醒：不需要在這裡手動 setTasks，因為 Socket 會傳回 ADD 事件自動更新畫面
             setInputValue(''); setInputTag(''); setInputDate('');
@@ -136,7 +136,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
         if (!targetTask) return;
 
         try {
-            await useRequestTrello(userState, "UPDATE", taskId, targetTask.title, targetTask.dueDate, true);
+            await requestTrello(userState, "UPDATE", taskId, targetTask.title, targetTask.dueDate, true);
             
             if (onTaskComplete) {
                 // 這裡多傳一個 taskId 給 App.js
@@ -149,7 +149,7 @@ const Home = ({ xp, level, onTaskComplete, userState }) => {
 
     const deleteTask = async (taskId) => {
         try {
-            await useRequestTrello(userState, "DELETE", taskId, "", "", false);
+            await requestTrello(userState, "DELETE", taskId, "", "", false);
         } catch (err) {
             console.error("刪除失敗:", err);
         }
